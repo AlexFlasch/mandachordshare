@@ -7,6 +7,10 @@ export default class StyledComponentsDocument extends Document {
   // from styled-components in both server and client
   // as opposed to default styled-jsx styles
 
+  bodyStyle = {
+    margin: 0
+  };
+
   static getInitialProps ({ renderPage }) {
     const sheet = new ServerStyleSheet()
     const page = renderPage(Index => props => sheet.collectStyles(<Index {...props} />))
@@ -19,9 +23,10 @@ export default class StyledComponentsDocument extends Document {
       <html>
         <Head>
           <title>My page</title>
+          <link href="https://fonts.googleapis.com/css?family=Oswald|Teko" rel="stylesheet"/>
           {this.props.styleTags}
         </Head>
-        <body>
+        <body style={this.bodyStyle}>
           <Main />
           <NextScript />
         </body>

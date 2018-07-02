@@ -1,15 +1,15 @@
 import styled from 'styled-components';
-import { withRouter } from 'next/router';
 import Page from '../layouts/main';
 import palette from '../palette';
+import { withRouter } from 'next/router';
 
 const Title = styled.h1`
   color: ${palette.lotusTheme.accent};
   font-family: 'Teko', sans-serif;
 `;
 
-export default withRouter(() => (
+export default withRouter((props) => (
   <Page>
-    <Title>I'm Home!</Title>
+    <Title>Searching for the search page...</Title>
   </Page>
 ));
