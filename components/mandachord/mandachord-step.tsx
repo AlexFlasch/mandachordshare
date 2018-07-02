@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Line } from 'react-konva';
+import { Line, Text } from 'react-konva';
 import MandachordNote from './mandachord-note';
 
 export default class MandachordStep extends Component {
@@ -18,11 +18,14 @@ export default class MandachordStep extends Component {
       <MandachordNote scale={scale} key={(pos * i) + i} pos={i} />
     )
 
-    const linePoints = [1.5, 75, 25, (6000 / scale)];
+    const linePoints = [1.75, 75, 3.25, (450 / scale)];
     const lineColor = '#E4F1FE';
-    const lineWidth = 2.5;
+    const lineWidth = 1;
     const barLine = (
-      <Line stroke={lineColor} strokeWidth={lineWidth} points={linePoints} width={lineWidth} />
+      <>
+        <Line stroke={lineColor} strokeWidth={lineWidth} points={linePoints} width={lineWidth} />
+        <Text text={`${(pos / 16) + 1}`} y={475 / scale} x={5} rotation={180} fill={lineColor} />
+      </>
     );
 
     return (

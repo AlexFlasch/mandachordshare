@@ -13,7 +13,7 @@ const StageContainer = styled.div`
 export default class Mandachord extends Component {
 
   virtualW = 500;
-  virtualH = 333.33;
+  virtualH = 400;
   numSteps = 48;
 
   constructor(props) {

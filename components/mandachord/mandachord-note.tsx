@@ -31,8 +31,8 @@ export default class MandachordNote extends Component {
     }
     // note is in resonator section
     else {
-      strokeColor = '#1F3A93';
-      fillColor = 'rgba(31, 58, 147, 0.4)';
+      strokeColor = '#4B77BE';
+      fillColor = 'rgba(75, 119, 190, 0.4)';
     }
 
     return (
