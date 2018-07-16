@@ -1,30 +1,14 @@
-import { Component } from 'react';
 import { Arc } from 'react-konva';
 import { transparentize, lighten } from 'polished';
 
-type NoteProps = {
-  pos: number;
-  scale: number;
-  onClick: Function;
-  isActive: boolean;
-};
+export default (props) => {
 
-export default class MandachordNote extends Component<NoteProps> {
-
-  isActive = false;
-
-  constructor(props) {
-    super(props);
-
-    this.toggleNote = this.toggleNote.bind(this);
+  const toggleNote = () => {
+    props.onClick(props.pos);
   }
 
-  toggleNote() {
-    this.props.onClick(this.props.pos);
-  }
-
-  getNoteColor() {
-    const pos = this.props.pos;
+  const getNoteColor = () => {
+    const pos = props.pos;
     let color;
 
     // note is in metronome section
@@ -43,22 +27,22 @@ export default class MandachordNote extends Component<NoteProps> {
     return color;
   }
 
-  drawNote() {
+  const drawNote = () => {
     const stepHeight = 275;
     const panCircleSize = 100;
     const notesPerStep = 13;
 
-    const pos = this.props.pos;
-    const scale = this.props.scale;
+    const pos = props.pos;
+    const scale = props.scale;
     // 270deg (start at top) (360 degrees / (16 notes per bar * 4 bars)) * step offset
     const angle = 360 / 64;
     // make size 40 so there's space
     const innerRadius = panCircleSize + (pos * (stepHeight / notesPerStep)) / scale;
     const outerRadius = innerRadius + (stepHeight / notesPerStep) / scale;
 
-    const color = this.getNoteColor();
+    const color = getNoteColor();
     const strokeColor = color;
-    const fillColor = this.props.isActive
+    const fillColor = props.isActive
       ? lighten(0.05, color)
       : transparentize(0.6, color);
 
@@ -71,12 +55,10 @@ export default class MandachordNote extends Component<NoteProps> {
         strokeWidth={1}
         offsetX={-25 - (pos * 2)}
         angle={angle}
-        onClick={this.toggleNote}
+        onClick={toggleNote}
       />
     );
   }
 
-  render() {
-    return this.drawNote();
-  }
+  return drawNote();
 }

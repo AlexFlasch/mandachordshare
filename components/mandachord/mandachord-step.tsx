@@ -31,11 +31,8 @@ export default class MandachordStep extends Component<StepProps, StepState> {
       prevState.notesState.splice(pos, 1, !prevState.notesState[pos]);
     });
 
-    console.log(this.state.notesState);
-
     // serialize active step notes here
 
-    console.log(`Note ${pos} in step ${this.props.pos} was made ${this.state.notesState[pos] ? 'active' : 'inactive'}`);
     this.forceUpdate();
   }
 
