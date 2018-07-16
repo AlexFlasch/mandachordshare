@@ -8,19 +8,20 @@ module.exports = withTypescript({
       config.plugins.push(new ForkTsCheckerWebpackPlugin());
     }
 
+    config.node = {
+      fs: 'empty'
+    };
+
     config.module.rules.push({
       test: /\.svg$/,
-      use: [
-        {
-          loader: "babel-loader"
-        },
-        {
-          loader: "react-svg-loader",
-          options: {
-            jsx: false // true outputs JSX tags
-          }
-        }
-      ]
+      exclude: /node_modules/,
+      loader: 'svg-react-loader',
+    });
+  
+    config.module.rules.push({
+      test: /\.(ts|tsx)$/,
+      exclude: /node_modules/,
+      loader: 'ts-loader'
     });
     
     return config;

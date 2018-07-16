@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Link from 'next/link';
 import { withRouter } from 'next/router';
 import SidebarButton from './sidebar-button';
 import HomeIcon from '../../assets/Lotus_Icon.svg';
@@ -25,6 +24,7 @@ const SidebarContainer = styled.div`
   background-color: ${palette.lotusTheme.bg};
   border-right: 1px solid ${palette.lotusTheme.primary};
   overflow-x: hidden;
+  z-index: 1;
   ${sidebarTransition}
 
   &:hover {
@@ -53,7 +53,6 @@ export default withRouter(() => {
       key={i}
       route={button.route}
       text={button.name}
-      className={button.className}
     >
       {button.icon}
     </SidebarButton>

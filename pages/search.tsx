@@ -8,7 +8,7 @@ const Title = styled.h1`
   font-family: 'Teko', sans-serif;
 `;
 
-export default withRouter((props) => (
+export default withRouter(() => (
   <Page>
     <Title>Searching for the search page...</Title>
   </Page>

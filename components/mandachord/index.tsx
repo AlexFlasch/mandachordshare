@@ -1,8 +1,10 @@
 import { Component } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
-import { Stage, Layer, Group, Circle, Text } from 'react-konva';
+import { Stage, Layer, Group, Circle } from 'react-konva';
 import MandachordStep from './mandachord-step';
+import PlayPauseButton from './play-pause-button';
+import palette from '../../palette';
 
 // styles
 const StageContainer = styled.div`
@@ -10,11 +12,24 @@ const StageContainer = styled.div`
   height: 50vh;
 `;
 
-export default class Mandachord extends Component {
+type MandachordProps = object;
+
+type MandachordState = {
+  stageWidth: number;
+  stageHeight: number;
+  stageScale: number;
+  stageRot: number;
+  isDragging: boolean;
+};
+
+export default class Mandachord extends Component<MandachordProps, MandachordState> {
 
   virtualW = 500;
   virtualH = 400;
-  numSteps = 48;
+  numSteps = 64;
+  dash1 = this.generateRandomDash(1, 25, 15);
+  dash2 = this.generateRandomDash(3, 50, 20);
+  circleAnimStarted = false;
 
   constructor(props) {
     super(props);
@@ -92,15 +107,13 @@ export default class Mandachord extends Component {
   }
 
   renderSteps() {
-    let w = this.state.stageWidth;
-    let h = this.state.stageHeight;
     const s = this.state.stageScale;
 
     const posArr = [...Array(this.numSteps).keys()]
     const steps = posArr.map(i =>
       <Group
         key={i}
-        rotation={i * 7.5}
+        rotation={i * (360 / this.numSteps)}
       >
         <MandachordStep scale={s} pos={i} />
       </Group>
@@ -109,16 +122,31 @@ export default class Mandachord extends Component {
     return steps;
   }
 
+  generateRandomDash(min, max, length) {
+    return Array.from({length: length}, () => Math.floor(min + Math.random() * (max - min)));
+  }
+
   renderPanCircle() {
-    const radius = 70;
+    const radius = 110;
     const fillColor = '#34495E';
 
     return (
-      <Circle
-        radius={radius}
-        fill={fillColor}
-        onMouseDown={this.startDragging}
-      />
+      <Group onMouseDown={this.startDragging}>
+        <Circle
+          radius={radius}
+          fill={fillColor}
+        />
+        <Circle
+          radius={radius - 5}
+          stroke={palette.lotusTheme.accent}
+          dash={this.dash1}
+        />
+        <Circle
+          radius={radius - 30}
+          stroke={palette.lotusTheme.accent}
+          dash={this.dash2}
+        />
+      </Group>
     );
   }
 
@@ -139,15 +167,22 @@ export default class Mandachord extends Component {
           scaleX={s}
           scaleY={s}>
           <Layer
+            x={10}
+            y={30}
+          >
+            <PlayPauseButton />
+          </Layer>
+          <Layer
             x={(w / 2) / s}
-            y={h / s}
-            rotation={r}
+            y={(h + 50) / s}
+            rotation={r + 135}
           >
             {steps}
           </Layer>
           <Layer
             x={(w / 2) / s}
-            y={h / s}
+            y={(h + 50) / s}
+            rotation={r}
           >
             {panCircle}
           </Layer>

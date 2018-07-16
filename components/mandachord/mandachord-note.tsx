@@ -1,39 +1,66 @@
 import { Component } from 'react';
-import { Arc, Text } from 'react-konva';
+import { Arc } from 'react-konva';
+import { transparentize, lighten } from 'polished';
 
-export default class MandachordNote extends Component {
+type NoteProps = {
+  pos: number;
+  scale: number;
+  onClick: Function;
+  isActive: boolean;
+};
+
+export default class MandachordNote extends Component<NoteProps> {
+
+  isActive = false;
 
   constructor(props) {
     super(props);
+
+    this.toggleNote = this.toggleNote.bind(this);
   }
 
-  drawNote() {
+  toggleNote() {
+    this.props.onClick(this.props.pos);
+  }
+
+  getNoteColor() {
     const pos = this.props.pos;
-    const scale = this.props.scale;
-    // 270deg (start at top) (360 degrees / (16 notes per bar * 4 bars)) * step offset
-    const angle = 7.5;
-    // make size 40 so there's space
-    const innerRadius = 50 + (pos * 25) / scale;
-    const outerRadius = innerRadius + 25 / scale;
-    
-    let strokeColor;
-    let fillColor;
+    let color;
 
     // note is in metronome section
     if (pos < 5) {
-      strokeColor = '#F62459';
-      fillColor = 'rgba(246, 36, 89, 0.4)';
+      color = '#F62459';
     }
     // note is in mallet section
     else if (pos > 9) {
-      strokeColor = '#67809F';
-      fillColor = 'rgba(103, 128, 159, 0.4)';
+      color = '#67809F';
     }
     // note is in resonator section
     else {
-      strokeColor = '#4B77BE';
-      fillColor = 'rgba(75, 119, 190, 0.4)';
+      color = '#4B77BE';
     }
+
+    return color;
+  }
+
+  drawNote() {
+    const stepHeight = 275;
+    const panCircleSize = 100;
+    const notesPerStep = 13;
+
+    const pos = this.props.pos;
+    const scale = this.props.scale;
+    // 270deg (start at top) (360 degrees / (16 notes per bar * 4 bars)) * step offset
+    const angle = 360 / 64;
+    // make size 40 so there's space
+    const innerRadius = panCircleSize + (pos * (stepHeight / notesPerStep)) / scale;
+    const outerRadius = innerRadius + (stepHeight / notesPerStep) / scale;
+
+    const color = this.getNoteColor();
+    const strokeColor = color;
+    const fillColor = this.props.isActive
+      ? lighten(0.05, color)
+      : transparentize(0.6, color);
 
     return (
       <Arc
@@ -44,6 +71,7 @@ export default class MandachordNote extends Component {
         strokeWidth={1}
         offsetX={-25 - (pos * 2)}
         angle={angle}
+        onClick={this.toggleNote}
       />
     );
   }
