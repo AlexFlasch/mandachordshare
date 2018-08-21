@@ -10,10 +10,12 @@ export default (props) => {
   `;
 
   const Input = styled.input`
-    width: 100%;
-    height: 90%;
+    background: none;
+    border: none;
     border-bottom: 3px solid ${primary};
     color: ${bg};
+    height: 90%;
+    width: 100%;
   `;
 
   return (
