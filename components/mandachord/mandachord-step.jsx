@@ -2,16 +2,7 @@ import { Component } from 'react';
 import { Line, Text } from 'react-konva';
 import MandachordNote from './mandachord-note';
 
-type StepProps = {
-  pos: number,
-  scale: number
-};
-
-type StepState = {
-  notesState: Array<boolean>
-};
-
-export default class MandachordStep extends Component<StepProps, StepState> {
+export default class MandachordStep extends Component {
 
   notesPerStep = 13;
 

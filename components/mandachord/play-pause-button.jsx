@@ -2,15 +2,7 @@ import { Component } from 'react';
 import { RegularPolygon, Rect, Group } from 'react-konva';
 import palette from '../../palette';
 
-type PlayPauseProps = {
-
-};
-
-type PlayPauseState = {
-  isPaused: boolean;
-};
-
-export default class PlayPauseButton extends Component<PlayPauseProps, PlayPauseState> {
+export default class PlayPauseButton extends Component {
 
   color = palette.lotusTheme.accent;
   clickShape = {

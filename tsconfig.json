@@ -12,6 +12,7 @@
     "sourceMap": true,
     "skipLibCheck": true,
     "baseUrl": ".",
+    "skipDefaultLibCheck": true,
     "lib": [
       "dom",
       "es2016"

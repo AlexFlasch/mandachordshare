@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from '../../../../AppData/Local/Microsoft/TypeScript/2.9/node_modules/@types/react-dom';
 import styled from 'styled-components';
 import { Stage, Layer, Group, Circle } from 'react-konva';
 import MandachordStep from './mandachord-step';
@@ -12,17 +12,7 @@ const StageContainer = styled.div`
   height: 50vh;
 `;
 
-type MandachordProps = object;
-
-type MandachordState = {
-  stageWidth: number;
-  stageHeight: number;
-  stageScale: number;
-  stageRot: number;
-  isDragging: boolean;
-};
-
-export default class Mandachord extends Component<MandachordProps, MandachordState> {
+export default class Mandachord extends Component {
 
   virtualW = 500;
   virtualH = 400;
