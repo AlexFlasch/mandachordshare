@@ -12,7 +12,11 @@ const PageContainer = styled.div`
 `;
 
 const LoginContainer = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: row;
   height: 50vh;
+  justify-content: center;
   width: 50vw;
 `;
 
