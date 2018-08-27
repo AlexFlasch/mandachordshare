@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import ReactDOM from '../../../../AppData/Local/Microsoft/TypeScript/2.9/node_modules/@types/react-dom';
+import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import { Stage, Layer, Group, Circle } from 'react-konva';
 import MandachordStep from './mandachord-step';
