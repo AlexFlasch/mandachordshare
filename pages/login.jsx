@@ -34,7 +34,7 @@ export default () => (
     <LoginContainer>
       <SiteIconContainer></SiteIconContainer>
       <LoginFormContainer>
-        <TextInput></TextInput>
+        <TextInput placeholder={'testing'}></TextInput>
       </LoginFormContainer>
     </LoginContainer>
   </PageContainer>
