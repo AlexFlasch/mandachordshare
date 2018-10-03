@@ -1,8 +1,20 @@
 import { Component } from 'react';
+import { connect } from 'react-redux';
 import { RegularPolygon, Rect, Group } from 'react-konva';
+
+import store from '../../state/store';
+import { playPauseMandachord } from '../../state/actions/mandachord';
+import getIsPaused from '../../state/selectors/mandachord';
 import palette from '../../palette';
 
-export default class PlayPauseButton extends Component {
+
+const mapStateToProps = (state) => {
+  return {
+    isPaused: getIsPaused(state)
+  };
+};
+
+class PlayPauseButton extends Component {
 
   color = palette.lotusTheme.accent;
   clickShape = {
@@ -13,23 +25,17 @@ export default class PlayPauseButton extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      isPaused: true
-    };
-
     this.togglePause = this.togglePause.bind(this);
     this.getButton = this.getButton.bind(this);
+
+    this.buttonIcon = getButton(isPaused());
   }
   
   togglePause() {
-    this.setState((prevState) => {
-      return {
-        isPaused: !prevState.isPaused
-      };
-    });
+    store.dispatch(playPauseMandachord(!store.getState().mandachord.isPaused));
   }
 
-  renderPlayButton() {
+  getPlayButton() {
     return (
       <RegularPolygon
         sides={3}
@@ -40,7 +46,7 @@ export default class PlayPauseButton extends Component {
     );
   }
 
-  renderPauseButton() {
+  getPauseButton() {
     const w = 10;
     const h = 30;
     const padding = 20
@@ -54,17 +60,17 @@ export default class PlayPauseButton extends Component {
       </Group>
     );
   }
-      
-  getButton() {
-    return this.state.isPaused
-      ? this.renderPlayButton()
-      : this.renderPauseButton();
+
+  getButton(isPaused) {
+    return isPaused
+      ? this.getPlayButton()
+      : this.getPauseButton();
   }
 
   render() {
     return (
       <Group>
-        {this.getButton()}
+        {this.buttonIcon}
         <Rect
           onClick={this.togglePause}
           width={this.clickShape.w}
@@ -78,3 +84,5 @@ export default class PlayPauseButton extends Component {
   }
         
 }
+
+export default connect(mapStateToProps)(PlayPauseButton);

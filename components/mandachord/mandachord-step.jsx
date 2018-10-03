@@ -29,12 +29,10 @@ export default class MandachordStep extends Component {
 
   drawStep() {
     const pos = this.props.pos;
-    const scale = this.props.scale;
 
     const posArr = [...Array(this.notesPerStep).keys()]
     const notes = posArr.map(i =>
       <MandachordNote
-        scale={scale}
         key={(pos * i) + i}
         pos={i}
         isActive={this.state.notesState[i]}
@@ -42,7 +40,7 @@ export default class MandachordStep extends Component {
       />
     )
 
-    const linePoints = [1.25, 122.5, 2.5, (475 / scale)];
+    const linePoints = [1.25, 122.5, 2.5, 425];
     const lineColor = '#E4F1FE';
     const lineWidth = 0.5;
     const isLoopPoint = pos / 16 === 0;
@@ -50,7 +48,7 @@ export default class MandachordStep extends Component {
     const barLine = (
       <>
         <Line stroke={lineColor} strokeWidth={lineWidth} dash={dash} points={linePoints} width={lineWidth} />
-        <Text text={`${(pos / 16) + 1}`} y={495 / scale} x={6} rotation={180} fill={lineColor} />
+        <Text text={`${(pos / 16) + 1}`} y={435} x={6} rotation={180} fill={lineColor} />
       </>
     );
 

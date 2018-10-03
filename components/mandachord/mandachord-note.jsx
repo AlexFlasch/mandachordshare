@@ -33,12 +33,11 @@ export default (props) => {
     const notesPerStep = 13;
 
     const pos = props.pos;
-    const scale = props.scale;
     // 270deg (start at top) (360 degrees / (16 notes per bar * 4 bars)) * step offset
     const angle = 360 / 64;
     // make size 40 so there's space
-    const innerRadius = panCircleSize + (pos * (stepHeight / notesPerStep)) / scale;
-    const outerRadius = innerRadius + (stepHeight / notesPerStep) / scale;
+    const innerRadius = panCircleSize + (pos * (stepHeight / notesPerStep));
+    const outerRadius = innerRadius + (stepHeight / notesPerStep);
 
     const color = getNoteColor();
     const strokeColor = color;
