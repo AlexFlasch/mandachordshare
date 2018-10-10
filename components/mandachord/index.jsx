@@ -2,6 +2,7 @@ import { Component } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import { Stage, Layer, Group, Circle } from 'react-konva';
+
 import MandachordStep from './mandachord-step';
 import PlayPauseButton from './play-pause-button';
 import palette from '../../palette';

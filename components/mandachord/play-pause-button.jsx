@@ -4,7 +4,6 @@ import { RegularPolygon, Rect, Group } from 'react-konva';
 
 import store from '../../state/store';
 import { playPauseMandachord } from '../../state/actions/mandachord';
-import getIsPaused from '../../state/selectors/mandachord';
 import palette from '../../palette';
 
 
@@ -28,7 +27,7 @@ class PlayPauseButton extends Component {
     this.togglePause = this.togglePause.bind(this);
     this.getButton = this.getButton.bind(this);
 
-    this.buttonIcon = getButton(isPaused());
+    this.buttonIcon = this.getButton(isPaused());
   }
   
   togglePause() {
@@ -85,4 +84,4 @@ class PlayPauseButton extends Component {
         
 }
 
-export default connect(mapStateToProps)(PlayPauseButton);
+export default connect()(PlayPauseButton);

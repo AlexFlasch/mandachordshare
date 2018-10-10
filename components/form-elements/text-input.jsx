@@ -10,8 +10,9 @@ const transition = `
 `;
 
 const InputContainer = styled.div`
+& {
   box-sizing: border-box;
-  color: ${palette.lotusTheme.primary}
+  color: ${palette.lotusTheme.primary};
   font-family: 'Teko', sans-serif;
   font-size: 1.5em;
   height: 35px;
@@ -37,6 +38,7 @@ const InputContainer = styled.div`
   &.focused::before {
     opacity: 1;
   }
+}
 `;
 
 const Input = styled.input`
@@ -81,7 +83,7 @@ export default class TextInput extends Component {
   }
 
   updatePlaceholder = () => {
-    if
+    // if ()
   }
 
   render() {
