@@ -6,8 +6,6 @@ export const initialState = {
     isPlaying: false
 };
 
-const rootReducer = (state = initialState, action) => state;
-
 export default combineReducers({
     mandachord: mandachordReducer
 });

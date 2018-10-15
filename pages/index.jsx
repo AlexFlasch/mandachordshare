@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import styled from 'styled-components';
-import { withRouter } from 'next/router';
 import Mandachord from '../components/mandachord';
 import Page from '../layouts/main';
 import palette from '../palette';

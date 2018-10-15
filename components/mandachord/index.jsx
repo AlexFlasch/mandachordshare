@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Stage, Layer, Group, Circle } from 'react-konva';
 
@@ -13,7 +14,7 @@ const StageContainer = styled.div`
   height: 50vh;
 `;
 
-export default class Mandachord extends Component {
+class Mandachord extends Component {
 
   virtualW = 500;
   virtualH = 400;
@@ -186,3 +187,5 @@ export default class Mandachord extends Component {
     return this.renderMandachord();
   }
 }
+
+export default connect()(Mandachord);
