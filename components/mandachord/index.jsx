@@ -188,4 +188,10 @@ class Mandachord extends Component {
   }
 }
 
-export default connect()(Mandachord);
+const mapStateToProps = (state) => {
+  return {
+    steps: state.steps
+  };
+}
+
+export default connect(mapStateToProps)(Mandachord);

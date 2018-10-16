@@ -1,16 +1,55 @@
 import { inspect } from 'util';
-import initialState from '../store/initial-state';
 import {
-  PLAY_PAUSE
+  PLAY_PAUSE,
+  TOGGLE_NOTE
 } from '../action-types';
 
-const mandachord = (state = [], action) => {
+const createInitialNoteState = () => {
+  const steps = 64;
+  const notesPerStep = 13;
+
+  const notes = {};
+  let counter = 0;
+  for (let i = 0; i < steps; i++) {
+    for (let j = 0; j < notesPerStep; j++) {
+      notes[counter] = {
+        stepPos: i,
+        notePos: j,
+        isActive: false
+      };
+      counter++;
+    }
+  }
+  return notes;
+}
+
+const initialState = {
+  isPaused: true,
+  notes: createInitialNoteState()
+};
+
+const mandachord = (state = initialState, action) => {
   switch (action.type) {
     case PLAY_PAUSE:
-      console.log(`PLAY_PAUSE action dispatched`);
       return {
         ...state,
         isPaused: !state.isPaused
+      };
+    
+    case TOGGLE_NOTE:
+      const notes = {
+        ...state.notes,
+        [action.payload.id]: {
+          ...state.notes[action.payload.id],
+          isActive: !state.notes[action.payload.id].isActive
+        }
+      }
+
+      debugger;
+      
+      return {
+        ...state,
+        ...notes
       };
     
     default:
@@ -18,12 +57,4 @@ const mandachord = (state = [], action) => {
   }
 }
 
-export default (prevState = initialState, action) => {
-  switch (action.type) {
-    case PLAY_PAUSE:
-      console.log(`PLAY_PAUSE action dispatched`)
-      return { ...prevState, isPaused: !prevState.isPaused };
-    default:
-      return prevState;
-  }
-}
+export default mandachord;

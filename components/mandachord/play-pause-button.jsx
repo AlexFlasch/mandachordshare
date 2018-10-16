@@ -57,14 +57,9 @@ const PlayPauseButton = ({ isPaused, togglePause }) => {
 
 const mapStateToProps = (state) => {
   const isPaused = state.mandachord.isPaused;
-  debugger;
   return { isPaused };
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    togglePause: dispatch(playPauseMandachord())
-  }
-}
+const mapDispatchToProps = { togglePause: playPauseMandachord }
 
-export default connect(mapStateToProps)(PlayPauseButton);
+export default connect(mapStateToProps, mapDispatchToProps)(PlayPauseButton);

@@ -1,7 +1,7 @@
 import { createStore } from 'redux';
 import combinedReducers from '../reducers';
 
-const makeStore = (initialState, options) => {
+const makeStore = () => {
   return createStore(combinedReducers);
 }
 

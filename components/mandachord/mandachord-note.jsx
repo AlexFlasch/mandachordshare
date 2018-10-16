@@ -1,14 +1,17 @@
+import { connect } from 'react-redux';
 import { Arc } from 'react-konva';
 import { transparentize, lighten } from 'polished';
 
-export default (props) => {
+import { toggleNote } from '../../state/actions/mandachord';
 
-  const toggleNote = () => {
-    props.onClick(props.pos);
-  }
+const MandachordNote = (props) => {
+
+  const self = [...props.notes].filter(note => {
+    return note.notePos === props.notePos && note.stepPos === props.stepPos
+  })[0];
 
   const getNoteColor = () => {
-    const pos = props.pos;
+    const pos = props.notePos;
     let color;
 
     // note is in metronome section
@@ -32,7 +35,7 @@ export default (props) => {
     const panCircleSize = 100;
     const notesPerStep = 13;
 
-    const pos = props.pos;
+    const pos = props.notePos;
     // 270deg (start at top) (360 degrees / (16 notes per bar * 4 bars)) * step offset
     const angle = 360 / 64;
     // make size 40 so there's space
@@ -41,7 +44,7 @@ export default (props) => {
 
     const color = getNoteColor();
     const strokeColor = color;
-    const fillColor = props.isActive
+    const fillColor = self.isActive
       ? lighten(0.05, color)
       : transparentize(0.6, color);
 
@@ -54,10 +57,21 @@ export default (props) => {
         strokeWidth={1}
         offsetX={-25 - (pos * 2)}
         angle={angle}
-        onClick={toggleNote}
+        onClick={() => props.toggleNote(self.id)}
       />
     );
   }
 
   return drawNote();
 }
+
+const mapStateToProps = (state) => {
+  const notes = state.mandachord.notes;
+  return { notes };
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  toggleNote: (stepPos, notePos) => dispatch(toggleNote(stepPos, notePos))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MandachordNote);

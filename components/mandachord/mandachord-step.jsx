@@ -1,8 +1,10 @@
 import { Component } from 'react';
+import { connect } from 'react-redux';
 import { Line, Text } from 'react-konva';
+
 import MandachordNote from './mandachord-note';
 
-export default class MandachordStep extends Component {
+class MandachordStep extends Component {
 
   notesPerStep = 13;
 
@@ -34,7 +36,8 @@ export default class MandachordStep extends Component {
     const notes = posArr.map(i =>
       <MandachordNote
         key={(pos * i) + i}
-        pos={i}
+        stepPos={pos}
+        notePos={i}
         isActive={this.state.notesState[i]}
         onClick={this.modifyStepNotes}
       />
@@ -65,3 +68,5 @@ export default class MandachordStep extends Component {
   }
 
 }
+
+export default connect()(MandachordStep);
