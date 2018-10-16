@@ -2,7 +2,8 @@ import { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Stage, Layer, Group, Circle } from 'react-konva';
+import { Stage, Layer, Group, Circle, Line, Wedge } from 'react-konva';
+import ReactAnimationFrame from 'react-animation-frame';
 
 import MandachordStep from './mandachord-step';
 import PlayPauseButton from './play-pause-button';
@@ -31,6 +32,7 @@ class Mandachord extends Component {
       stageHeight: 0,
       stageScale: 0,
       stageRot: 0,
+      currentNoteRot: 0,
       isDragging: false
     };
     this.resizeMandachord = this.resizeMandachord.bind(this);
@@ -64,9 +66,23 @@ class Mandachord extends Component {
     });
   }
 
+  onAnimationFrame(timestamp, lastTimestamp) {
+    if (this.props.isPaused) {
+      return;
+    }
+
+    const delta = timestamp - lastTimestamp;
+
+    const rot = -1 * (delta / 100) * 4.5;
+    
+    this.setState(prevState => ({
+      stageRot: prevState.stageRot + rot,
+      currentNoteRot: prevState.currentNoteRot + rot
+    }));
+  }
+
   startDragging({ evt }) {
-    // already dragging. dunno how this happened, but ignore it.
-    if (this.state.isDragging) return;
+    if (this.state.isDragging || !this.props.isPaused) return;
 
     let lastX = evt.screenX;
 
@@ -96,6 +112,32 @@ class Mandachord extends Component {
     window.addEventListener('mouseup', mouseUpListener);
     // listen for mousemove while dragging so we can rotate
     window.addEventListener('mousemove', moveListener);
+  }
+
+  renderCurrentNoteMark() {
+    const lineColor = '#fff';
+    const lineWidth = 1;
+    const linePoints = [1.25, 122.5, 2.5, 435]
+
+    return (
+      <Group
+        rotation={-1 * this.state.currentNoteRot}
+      >
+        <Line
+          stroke={lineColor}
+          strokeWidth={lineWidth}
+          points={linePoints}
+        >
+        </Line>
+        <Circle
+          x={2.5}
+          y={432.5}
+          radius={5}
+          fill={lineColor}
+        >
+        </Circle>
+      </Group>
+    );
   }
 
   renderSteps() {
@@ -169,6 +211,7 @@ class Mandachord extends Component {
             y={(h + 50) / s}
             rotation={r + 135}
           >
+            {this.renderCurrentNoteMark()}
             {steps}
           </Layer>
           <Layer
@@ -190,8 +233,8 @@ class Mandachord extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    steps: state.steps
+    isPaused: state.mandachord.isPaused,
   };
 }
 
-export default connect(mapStateToProps)(Mandachord);
+export default connect(mapStateToProps)(ReactAnimationFrame(Mandachord, 1));
