@@ -9,15 +9,13 @@ const createInitialNoteState = () => {
   const notesPerStep = 13;
 
   const notes = {};
-  let counter = 0;
   for (let i = 0; i < steps; i++) {
     for (let j = 0; j < notesPerStep; j++) {
-      notes[counter] = {
+      notes[`${i}:${j}`] = {
         stepPos: i,
         notePos: j,
         isActive: false
       };
-      counter++;
     }
   }
   return notes;
@@ -44,12 +42,10 @@ const mandachord = (state = initialState, action) => {
           isActive: !state.notes[action.payload.id].isActive
         }
       }
-
-      debugger;
       
       return {
         ...state,
-        ...notes
+        notes
       };
     
     default:

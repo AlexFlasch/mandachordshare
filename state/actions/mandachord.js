@@ -4,4 +4,4 @@ import {
 } from '../action-types';
 
 export const playPauseMandachord = () => ({ type: PLAY_PAUSE });
-export const toggleNote = (stepPos, notePos) => ({ type: TOGGLE_NOTE, payload: { stepPos, notePos } });
+export const toggleNote = (id) => ({ type: TOGGLE_NOTE, payload: { id } });

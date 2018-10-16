@@ -6,10 +6,6 @@ import { toggleNote } from '../../state/actions/mandachord';
 
 const MandachordNote = (props) => {
 
-  const self = [...props.notes].filter(note => {
-    return note.notePos === props.notePos && note.stepPos === props.stepPos
-  })[0];
-
   const getNoteColor = () => {
     const pos = props.notePos;
     let color;
@@ -44,7 +40,7 @@ const MandachordNote = (props) => {
 
     const color = getNoteColor();
     const strokeColor = color;
-    const fillColor = self.isActive
+    const fillColor = props.isActive
       ? lighten(0.05, color)
       : transparentize(0.6, color);
 
@@ -57,7 +53,7 @@ const MandachordNote = (props) => {
         strokeWidth={1}
         offsetX={-25 - (pos * 2)}
         angle={angle}
-        onClick={() => props.toggleNote(self.id)}
+        onClick={() => props.toggleNote(props.id) }
       />
     );
   }
@@ -65,13 +61,14 @@ const MandachordNote = (props) => {
   return drawNote();
 }
 
-const mapStateToProps = (state) => {
-  const notes = state.mandachord.notes;
-  return { notes };
+const mapStateToProps = (state, props) => {
+  const id = `${props.stepPos}:${props.notePos}`;
+  const self = state.mandachord.notes[id];
+  return { id, isActive: self.isActive };
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  toggleNote: (stepPos, notePos) => dispatch(toggleNote(stepPos, notePos))
+  toggleNote: (id) => dispatch(toggleNote(id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MandachordNote);
