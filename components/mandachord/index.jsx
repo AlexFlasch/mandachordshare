@@ -1,18 +1,50 @@
-import { Component } from 'react';
+import { Component, createRef } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Stage, Layer, Group, Circle, Line, Wedge } from 'react-konva';
+import { transparentize } from 'polished';
+import { Stage, Layer, Group, Circle, Line } from 'react-konva';
 import ReactAnimationFrame from 'react-animation-frame';
 
 import MandachordStep from './mandachord-step';
 import PlayPauseButton from './play-pause-button';
+import Dropdown from '../form-elements/dropdown.jsx';
 import palette from '../../palette';
 
 // styles
-const StageContainer = styled.div`
-  width: 75vw;
-  height: 50vh;
+const MandachordContainer = styled.div`
+  display: flex;
+  height: 50vh;;
+  width: 100%;
+`;
+
+const CanvasContainer = styled.div`
+  height: 100%;
+  width: 80%;
+`;
+
+const InstrumentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 20%;
+  padding: 5px;
+`;
+
+const InstrumentSelection = styled.div`
+  padding: 10px 0;
+`;
+
+const InstrumentLabel = styled.span`
+  color: ${palette.lotusTheme.secondary};
+  font-family: 'Teko', sans-serif;
+  font-size: 1.65em;
+  margin-top: 15px;
+  text-transform: uppercase;
+`;
+
+const InstrumentDropdown = styled(Dropdown)`
+  width: 100%;
 `;
 
 class Mandachord extends Component {
@@ -23,6 +55,18 @@ class Mandachord extends Component {
   dash1 = this.generateRandomDash(1, 25, 15);
   dash2 = this.generateRandomDash(3, 50, 20);
   circleAnimStarted = false;
+  canvasContainer = createRef();
+  instruments = [
+    { name: 'Adau', value: 1 },
+    { name: 'Alpha', value: 2 },
+    { name: 'Beta', value: 3 },
+    { name: 'Delta', value: 4 },
+    { name: 'Druk', value: 5 },
+    { name: 'Epsilon', value: 6 },
+    { name: 'Gamma', value: 7 },
+    { name: 'Horus', value: 8 },
+    { name: 'Plokk', value: 9 }
+  ];
 
   constructor(props) {
     super(props);
@@ -50,9 +94,8 @@ class Mandachord extends Component {
   }
 
   resizeMandachord() {
-    let stageContainer = ReactDOM.findDOMNode(this);
-    let w = stageContainer.clientWidth;
-    let h = stageContainer.clientHeight;
+    let w = this.canvasContainer.current.clientWidth;
+    let h = this.canvasContainer.current.clientHeight;
 
     let s = Math.min(
       w / this.virtualW,
@@ -194,40 +237,73 @@ class Mandachord extends Component {
     const panCircle = this.renderPanCircle();
 
     return (
-      <StageContainer>
-        <Stage
-          width={w}
-          height={h}
-          scaleX={s}
-          scaleY={s}>
-          <Layer
-            x={10}
-            y={30}
-          >
-            <PlayPauseButton />
-          </Layer>
-          <Layer
-            x={(w / 2) / s}
-            y={(h + 50) / s}
-            rotation={r + 135}
-          >
-            {this.renderCurrentNoteMark()}
-            {steps}
-          </Layer>
-          <Layer
-            x={(w / 2) / s}
-            y={(h + 50) / s}
-            rotation={r}
-          >
-            {panCircle}
-          </Layer>
-        </Stage>
-      </StageContainer>
+      <Stage
+        width={w}
+        height={h}
+        scaleX={s}
+        scaleY={s}>
+        <Layer
+          x={10}
+          y={30}
+        >
+          <PlayPauseButton />
+        </Layer>
+        <Layer
+          x={(w / 2) / s}
+          y={(h + 50) / s}
+          rotation={r + 135}
+        >
+          {this.renderCurrentNoteMark()}
+          {steps}
+        </Layer>
+        <Layer
+          x={(w / 2) / s}
+          y={(h + 50) / s}
+          rotation={r}
+        >
+          {panCircle}
+        </Layer>
+      </Stage>
     );
   }
 
   render() {
-    return this.renderMandachord();
+    return (
+      <MandachordContainer>
+        <CanvasContainer innerRef={this.canvasContainer}>
+          { this.renderMandachord() }
+        </CanvasContainer>
+        <InstrumentContainer>
+          <InstrumentSelection>
+            <InstrumentLabel>
+              Percussion
+            </InstrumentLabel>
+            <InstrumentDropdown
+              placeholder={'Select an instrument'}
+              items={this.instruments}
+            />
+          </InstrumentSelection>
+          <InstrumentSelection>
+            <InstrumentLabel>
+              Bass
+            </InstrumentLabel>
+            <InstrumentDropdown
+              placeholder={'Select an instrument'}
+              items={this.instruments}
+            />
+          </InstrumentSelection>
+          <InstrumentSelection>
+            <InstrumentLabel>
+              Melody
+            </InstrumentLabel>
+            <InstrumentDropdown
+              placeholder={'Select an instrument'}
+              items={this.instruments}
+            />
+          </InstrumentSelection>
+        </InstrumentContainer>
+      </MandachordContainer>
+    );
   }
 }
 
