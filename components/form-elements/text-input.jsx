@@ -2,12 +2,7 @@ import { Component } from 'react';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
 import palette from '../../palette';
-
-const transition = `
-  transition-property: all;
-  transition-duration: 0.15s;
-  transition-timing-function: ease-in-out;
-`;
+import { transition } from '../../styles/constants';
 
 const InputContainer = styled.div`
 & {

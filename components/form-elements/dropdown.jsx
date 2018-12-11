@@ -1,32 +1,60 @@
-import { createRef } from "react";
-import styled from "styled-components";
+import Select from 'react-select';
+import styled from 'styled-components';
 
-import palette from "../../palette";
+import palette from '../../palette';
+import { transition } from '../../styles/constants';
 
-const DropdownBox = styled.div`
-  background: none;
-  border: none;
-  border-bottom: 3px solid ${palette.lotusTheme.accent};
-  box-sizing: border-box;
-  color: ${palette.lotusTheme.primary};
-  cursor: pointer;
-  font-family: "Teko", sans-serif;
-  font-size: 1.5em;
-  height: 35px;
-  padding: 5px;
-  position: relative;
+const DropdownBox = styled(Select)`
+  & > div:first-of-type {
+    background: none;
+    border: none;
+    border-bottom: 3px solid ${palette.lotusTheme.accent};
+    border-radius: 0;
+    box-sizing: border-box;
+    box-shadow: none;
+    color: ${palette.lotusTheme.primary};
+    cursor: pointer;
+    font-family: 'Teko', sans-serif;
+    font-size: 1.5em;
+    height: 35px;
+    padding: 5px;
+    position: relative;
+    ${transition};
 
-  &::after {
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-top: 10px solid ${palette.lotusTheme.accent};
-    content: "";
-    height: 0;
-    position: absolute;
-    right: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
+    &:hover {
+      border-color: ${palette.lotusTheme.primary};
+      ${transition};
+    }
+
+    /* separator */
+    & > div:nth-of-type(2) > span {
+      background-color: transparent;
+    }
+  }
+
+  /* dropdown list */
+  & > div:nth-of-type(2) {
+    margin: 0;
+    background-color: ${palette.lotusTheme.bg};
+    border-radius: 0;
+    border: 1px solid ${palette.lotusTheme.primary};
+    font-family: 'Teko', sans-serif;
+
+    & > * {
+      padding: 5px 0;
+      color: ${palette.lotusTheme.primary};
+      font-size: 1.1em;
+
+      & > *:hover,
+      & > *:focus {
+        background-color: ${palette.lotusTheme.primary};
+        color: ${palette.lotusTheme.bg};
+      }
+    }
+  }
+
+  svg {
+    fill: ${palette.lotusTheme.accent};
   }
 `;
 
@@ -45,73 +73,12 @@ const DropdownList = styled.div`
   z-index: 1;
 `;
 
-export default props => {
-  let selectedValue = undefined;
-  let listEl = createRef();
-  let isOpen = false;
-
-  const selectItem = (name, value) => {
-    selectedValue = { name, value };
-    isOpen = false;
-  };
-
-  const getDropdownItems = () => {
-    return props.items ? (
-      props.items.map((item, i) => (
-        <DropdownItem
-          key={i}
-          name={item.name}
-          value={item.value}
-          onClick={() => selectItem(item.name, item.value)}
-        />
-      ))
-    ) : (
-      <DropdownItem name={"No available items"} value={-1} />
-    );
-  };
-
-  const toggleListVisibility = ({ currentTarget }) => {
-    if (isOpen) {
-      isOpen = false;
-    } else {
-      isOpen = true;
-      document.body.addEventListener(
-        "click",
-        e => {
-          if (listEl.current.contains(e.target)) {
-            return;
-          } else {
-            setTimeout(() => {
-              // timeout required otherwise this click handler
-              // runs before toggleListVisibility runs again
-              isOpen = false;
-            }, 100);
-          }
-        },
-        { once: true }
-      );
-    }
-  };
-
-  return (
-    <DropdownBox className={props.className} onClick={toggleListVisibility}>
-      {selectedValue || props.placeholder || "Select a value"}
-      <DropdownList innerRef={listEl} isVisible={isOpen}>
-        {getDropdownItems()}
-      </DropdownList>
-    </DropdownBox>
-  );
+// passing these noops makes them behave with styled components... ¯\_(ツ)_/¯
+const reactSelectStyles = {
+  option: () => {},
+  singleValue: () => {}
 };
 
-const ItemContainer = styled.span`
-  padding: 2px;
-  padding-left: 5px;
-
-  &:not(:last-child) {
-    border-bottom: 1px solid ${palette.lotusTheme.primary};
-  }
-`;
-
-const DropdownItem = ({ name, onClick }) => {
-  return <ItemContainer onClick={onClick}>{name}</ItemContainer>;
-};
+export default props => (
+  <DropdownBox options={props.items} styles={reactSelectStyles} />
+);

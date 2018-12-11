@@ -14,7 +14,7 @@ import palette from '../../palette';
 // styles
 const MandachordContainer = styled.div`
   display: flex;
-  height: 50vh;;
+  height: 50vh;
   width: 100%;
 `;
 
@@ -48,7 +48,6 @@ const InstrumentDropdown = styled(Dropdown)`
 `;
 
 class Mandachord extends Component {
-
   virtualW = 500;
   virtualH = 400;
   numSteps = 64;
@@ -57,15 +56,15 @@ class Mandachord extends Component {
   circleAnimStarted = false;
   canvasContainer = createRef();
   instruments = [
-    { name: 'Adau', value: 1 },
-    { name: 'Alpha', value: 2 },
-    { name: 'Beta', value: 3 },
-    { name: 'Delta', value: 4 },
-    { name: 'Druk', value: 5 },
-    { name: 'Epsilon', value: 6 },
-    { name: 'Gamma', value: 7 },
-    { name: 'Horus', value: 8 },
-    { name: 'Plokk', value: 9 }
+    { label: 'Adau', value: 1 },
+    { label: 'Alpha', value: 2 },
+    { label: 'Beta', value: 3 },
+    { label: 'Delta', value: 4 },
+    { label: 'Druk', value: 5 },
+    { label: 'Epsilon', value: 6 },
+    { label: 'Gamma', value: 7 },
+    { label: 'Horus', value: 8 },
+    { label: 'Plokk', value: 9 }
   ];
 
   constructor(props) {
@@ -97,10 +96,7 @@ class Mandachord extends Component {
     let w = this.canvasContainer.current.clientWidth;
     let h = this.canvasContainer.current.clientHeight;
 
-    let s = Math.min(
-      w / this.virtualW,
-      h / this.virtualH
-    );
+    let s = Math.min(w / this.virtualW, h / this.virtualH);
 
     this.setState({
       stageWidth: w,
@@ -117,7 +113,7 @@ class Mandachord extends Component {
     const delta = timestamp - lastTimestamp;
 
     const rot = -1 * (delta / 100) * 4.5;
-    
+
     this.setState(prevState => ({
       stageRot: prevState.stageRot + rot,
       currentNoteRot: prevState.currentNoteRot + rot
@@ -131,17 +127,17 @@ class Mandachord extends Component {
 
     this.setState({ isDragging: true });
 
-    const moveListener = (e) => {
+    const moveListener = e => {
       const speed = 0.1;
 
       let rot = speed * (e.screenX - lastX);
       // rotate the mandachord
-      this.setState((prevState) => ({
+      this.setState(prevState => ({
         stageRot: prevState.stageRot + rot
       }));
 
       lastX = e.screenX;
-    }
+    };
 
     const mouseUpListener = () => {
       this.setState({ isDragging: false });
@@ -149,7 +145,7 @@ class Mandachord extends Component {
       // remove the listener after we've stopped dragging
       window.removeEventListener('mouseup', mouseUpListener);
       window.removeEventListener('mousemove', moveListener);
-    }
+    };
 
     // listen across the whole window for mouseup so we can stop panning
     window.addEventListener('mouseup', mouseUpListener);
@@ -160,25 +156,12 @@ class Mandachord extends Component {
   renderCurrentNoteMark() {
     const lineColor = '#fff';
     const lineWidth = 1;
-    const linePoints = [1.25, 122.5, 2.5, 435]
+    const linePoints = [1.25, 122.5, 2.5, 435];
 
     return (
-      <Group
-        rotation={-1 * this.state.currentNoteRot}
-      >
-        <Line
-          stroke={lineColor}
-          strokeWidth={lineWidth}
-          points={linePoints}
-        >
-        </Line>
-        <Circle
-          x={2.5}
-          y={432.5}
-          radius={5}
-          fill={lineColor}
-        >
-        </Circle>
+      <Group rotation={-1 * this.state.currentNoteRot}>
+        <Line stroke={lineColor} strokeWidth={lineWidth} points={linePoints} />
+        <Circle x={2.5} y={432.5} radius={5} fill={lineColor} />
       </Group>
     );
   }
@@ -186,21 +169,20 @@ class Mandachord extends Component {
   renderSteps() {
     const s = this.state.stageScale;
 
-    const posArr = [...Array(this.numSteps).keys()]
-    const steps = posArr.map(i =>
-      <Group
-        key={i}
-        rotation={i * (360 / this.numSteps)}
-      >
+    const posArr = [...Array(this.numSteps).keys()];
+    const steps = posArr.map(i => (
+      <Group key={i} rotation={i * (360 / this.numSteps)}>
         <MandachordStep pos={i} />
       </Group>
-    );
+    ));
 
     return steps;
   }
 
   generateRandomDash(min, max, length) {
-    return Array.from({length: length}, () => Math.floor(min + Math.random() * (max - min)));
+    return Array.from({ length: length }, () =>
+      Math.floor(min + Math.random() * (max - min))
+    );
   }
 
   renderPanCircle() {
@@ -209,10 +191,7 @@ class Mandachord extends Component {
 
     return (
       <Group onMouseDown={this.startDragging}>
-        <Circle
-          radius={radius}
-          fill={fillColor}
-        />
+        <Circle radius={radius} fill={fillColor} />
         <Circle
           radius={radius - 5}
           stroke={palette.lotusTheme.accent}
@@ -237,30 +216,15 @@ class Mandachord extends Component {
     const panCircle = this.renderPanCircle();
 
     return (
-      <Stage
-        width={w}
-        height={h}
-        scaleX={s}
-        scaleY={s}>
-        <Layer
-          x={10}
-          y={30}
-        >
+      <Stage width={w} height={h} scaleX={s} scaleY={s}>
+        <Layer x={10} y={30}>
           <PlayPauseButton />
         </Layer>
-        <Layer
-          x={(w / 2) / s}
-          y={(h + 50) / s}
-          rotation={r + 135}
-        >
+        <Layer x={w / 2 / s} y={(h + 50) / s} rotation={r + 135}>
           {this.renderCurrentNoteMark()}
           {steps}
         </Layer>
-        <Layer
-          x={(w / 2) / s}
-          y={(h + 50) / s}
-          rotation={r}
-        >
+        <Layer x={w / 2 / s} y={(h + 50) / s} rotation={r}>
           {panCircle}
         </Layer>
       </Stage>
@@ -271,31 +235,25 @@ class Mandachord extends Component {
     return (
       <MandachordContainer>
         <CanvasContainer innerRef={this.canvasContainer}>
-          { this.renderMandachord() }
+          {this.renderMandachord()}
         </CanvasContainer>
         <InstrumentContainer>
           <InstrumentSelection>
-            <InstrumentLabel>
-              Percussion
-            </InstrumentLabel>
+            <InstrumentLabel>Percussion</InstrumentLabel>
             <InstrumentDropdown
               placeholder={'Select an instrument'}
               items={this.instruments}
             />
           </InstrumentSelection>
           <InstrumentSelection>
-            <InstrumentLabel>
-              Bass
-            </InstrumentLabel>
+            <InstrumentLabel>Bass</InstrumentLabel>
             <InstrumentDropdown
               placeholder={'Select an instrument'}
               items={this.instruments}
             />
           </InstrumentSelection>
           <InstrumentSelection>
-            <InstrumentLabel>
-              Melody
-            </InstrumentLabel>
+            <InstrumentLabel>Melody</InstrumentLabel>
             <InstrumentDropdown
               placeholder={'Select an instrument'}
               items={this.instruments}
@@ -307,10 +265,10 @@ class Mandachord extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    isPaused: state.mandachord.isPaused,
+    isPaused: state.mandachord.isPaused
   };
-}
+};
 
 export default connect(mapStateToProps)(ReactAnimationFrame(Mandachord, 1));
