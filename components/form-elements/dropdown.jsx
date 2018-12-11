@@ -79,6 +79,14 @@ const reactSelectStyles = {
   singleValue: () => {}
 };
 
-export default props => (
-  <DropdownBox options={props.items} styles={reactSelectStyles} />
-);
+export default ({ onChange, items, value, placeholder }) => {
+  return (
+    <DropdownBox
+      onChange={onChange}
+      options={items}
+      value={value}
+      placeholder={placeholder}
+      styles={reactSelectStyles}
+    />
+  );
+};

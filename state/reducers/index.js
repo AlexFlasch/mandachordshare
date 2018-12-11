@@ -1,11 +1,13 @@
 import { combineReducers } from 'redux';
 
-import mandachordReducer from './mandachord';
+import mandachordReducer, {
+  initialState as mandachordInitialState
+} from './mandachord';
 
 export const initialState = {
-    isPlaying: false
+  mandachord: mandachordInitialState
 };
 
 export default combineReducers({
-    mandachord: mandachordReducer
+  mandachord: mandachordReducer
 });

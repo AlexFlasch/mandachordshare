@@ -6,6 +6,9 @@ import { transparentize } from 'polished';
 import { Stage, Layer, Group, Circle, Line } from 'react-konva';
 import ReactAnimationFrame from 'react-animation-frame';
 
+import { BASS, MELODY, PERCUSSION } from './constants';
+import { changeInstrument } from '../../state/actions/mandachord';
+
 import MandachordStep from './mandachord-step';
 import PlayPauseButton from './play-pause-button';
 import Dropdown from '../form-elements/dropdown.jsx';
@@ -55,7 +58,7 @@ class Mandachord extends Component {
   dash2 = this.generateRandomDash(3, 50, 20);
   circleAnimStarted = false;
   canvasContainer = createRef();
-  instruments = [
+  instrumentPacks = [
     { label: 'Adau', value: 1 },
     { label: 'Alpha', value: 2 },
     { label: 'Beta', value: 3 },
@@ -231,7 +234,12 @@ class Mandachord extends Component {
     );
   }
 
+  handleInstrumentChange = role => instrument => {
+    this.props.changeInstrument(role, instrument);
+  };
+
   render() {
+    console.log(this.instrumentPacks[BASS]);
     return (
       <MandachordContainer>
         <CanvasContainer innerRef={this.canvasContainer}>
@@ -241,22 +249,28 @@ class Mandachord extends Component {
           <InstrumentSelection>
             <InstrumentLabel>Percussion</InstrumentLabel>
             <InstrumentDropdown
+              onChange={this.handleInstrumentChange(PERCUSSION)}
+              // value={this.instruments[PERCUSSION]}
               placeholder={'Select an instrument'}
-              items={this.instruments}
+              items={this.instrumentPacks}
             />
           </InstrumentSelection>
           <InstrumentSelection>
             <InstrumentLabel>Bass</InstrumentLabel>
             <InstrumentDropdown
+              onChange={this.handleInstrumentChange(BASS)}
+              // value={this.instruments[BASS]}
               placeholder={'Select an instrument'}
-              items={this.instruments}
+              items={this.instrumentPacks}
             />
           </InstrumentSelection>
           <InstrumentSelection>
             <InstrumentLabel>Melody</InstrumentLabel>
             <InstrumentDropdown
+              onChange={this.handleInstrumentChange(MELODY)}
+              // value={this.instruments[MELODY]}
               placeholder={'Select an instrument'}
-              items={this.instruments}
+              items={this.instrumentPacks}
             />
           </InstrumentSelection>
         </InstrumentContainer>
@@ -267,8 +281,16 @@ class Mandachord extends Component {
 
 const mapStateToProps = state => {
   return {
-    isPaused: state.mandachord.isPaused
+    isPaused: state.mandachord.isPaused,
+    instruments: state.mandachord.instruments
   };
 };
 
-export default connect(mapStateToProps)(ReactAnimationFrame(Mandachord, 1));
+const mapDispatchToProps = {
+  changeInstrument
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ReactAnimationFrame(Mandachord, 1));

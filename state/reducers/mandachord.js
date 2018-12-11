@@ -1,5 +1,5 @@
-import { PLAY_PAUSE, TOGGLE_NOTE } from '../action-types';
-import { INSTRUMENT_TYPES } from '../constants';
+import { PLAY_PAUSE, TOGGLE_NOTE, CHANGE_INSTRUMENT } from '../action-types';
+import { BASS, MELODY, PERCUSSION } from '../constants';
 
 const createInitialNoteState = () => {
   const steps = 64;
@@ -18,37 +18,46 @@ const createInitialNoteState = () => {
   return notes;
 };
 
-const initialState = {
+export const initialState = {
   isPaused: true,
   notes: createInitialNoteState(),
-  ...INSTRUMENT_TYPES
+  instruments: {
+    [BASS]: { label: 'Adau', value: 1 },
+    [MELODY]: { label: 'Adau', value: 1 },
+    [PERCUSSION]: { label: 'Adau', value: 1 }
+  }
 };
 
-const mandachord = (state = initialState, action) => {
-  switch (action.type) {
-  case PLAY_PAUSE:
-    return {
-      ...state,
-      isPaused: !state.isPaused
-    };
+const mandachord = (state = initialState, { type, payload }) => {
+  switch (type) {
+    case PLAY_PAUSE:
+      return {
+        ...state,
+        isPaused: !state.isPaused
+      };
 
-  case TOGGLE_NOTE:
-    return {
-      ...state,
-      notes: {
-        ...state.notes,
-        [action.payload.id]: {
-          ...state.notes[action.payload.id],
-          isActive: !state.notes[action.payload.id].isActive
+    case TOGGLE_NOTE:
+      return {
+        ...state,
+        notes: {
+          ...state.notes,
+          [payload.id]: {
+            ...state.notes[payload.id],
+            isActive: !state.notes[payload.id].isActive
+          }
         }
-      }
-    };
+      };
 
-  case CHANGE_INSTRUMENT:
-    return {};
+    case CHANGE_INSTRUMENT:
+      return {
+        ...state,
+        instruments: {
+          [payload.instrumentType]: payload.value
+        }
+      };
 
-  default:
-    return state;
+    default:
+      return state;
   }
 };
 
