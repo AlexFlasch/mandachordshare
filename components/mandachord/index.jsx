@@ -1,10 +1,10 @@
 import { Component, createRef } from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { transparentize } from 'polished';
 import { Stage, Layer, Group, Circle, Line } from 'react-konva';
 import ReactAnimationFrame from 'react-animation-frame';
+
+import supportsPassive from '../../util/supportsPassive';
 
 import { BASS, MELODY, PERCUSSION } from './constants';
 import { changeInstrument } from '../../state/actions/mandachord';
@@ -147,13 +147,25 @@ class Mandachord extends Component {
 
       // remove the listener after we've stopped dragging
       window.removeEventListener('mouseup', mouseUpListener);
+      window.removeEventListener('touchend', mouseUpListener);
       window.removeEventListener('mousemove', moveListener);
+      window.removeEventListener('touchmove', moveListener);
     };
 
-    // listen across the whole window for mouseup so we can stop panning
-    window.addEventListener('mouseup', mouseUpListener);
-    // listen for mousemove while dragging so we can rotate
-    window.addEventListener('mousemove', moveListener);
+    if (supportsPassive) {
+      // listen across the whole window for mouseup so we can stop panning
+      window.addEventListener('mouseup', mouseUpListener, { passive: true });
+      window.addEventListener('touchend', mouseUpListener, { passive: true });
+      // listen for mousemove while dragging so we can rotate
+      window.addEventListener('mousemove', moveListener, { passive: true });
+      window.addEventListener('touchmove', moveListener, { passive: true });
+    } else {
+      // same as above, but not passive if the browser doesn't support passive event listeners
+      window.addEventListener('mouseup', mouseUpListener);
+      window.addEventListener('touchend', mouseUpListener);
+      window.addEventListener('mousemove', moveListener);
+      window.addEventListener('touchmove', moveListener);
+    }
   }
 
   renderCurrentNoteMark() {
@@ -164,7 +176,7 @@ class Mandachord extends Component {
     return (
       <Group rotation={-1 * this.state.currentNoteRot}>
         <Line stroke={lineColor} strokeWidth={lineWidth} points={linePoints} />
-        <Circle x={2.5} y={432.5} radius={5} fill={lineColor} />
+        <Circle x={2.5} y={432.5} radius={7.5} fill={lineColor} />
       </Group>
     );
   }
@@ -210,24 +222,32 @@ class Mandachord extends Component {
   }
 
   renderMandachord() {
-    const w = this.state.stageWidth;
-    const h = this.state.stageHeight;
-    const s = this.state.stageScale;
-    const r = this.state.stageRot;
+    const width = this.state.stageWidth;
+    const height = this.state.stageHeight;
+    const scale = this.state.stageScale;
+    const rotation = this.state.stageRot;
 
     const steps = this.renderSteps();
     const panCircle = this.renderPanCircle();
 
     return (
-      <Stage width={w} height={h} scaleX={s} scaleY={s}>
+      <Stage width={width} height={height} scaleX={scale} scaleY={scale}>
         <Layer x={10} y={30}>
           <PlayPauseButton />
         </Layer>
-        <Layer x={w / 2 / s} y={(h + 50) / s} rotation={r + 135}>
+        <Layer
+          x={width / 2 / scale}
+          y={(height + 50) / scale}
+          rotation={rotation + 135}
+        >
           {this.renderCurrentNoteMark()}
           {steps}
         </Layer>
-        <Layer x={w / 2 / s} y={(h + 50) / s} rotation={r}>
+        <Layer
+          x={width / 2 / scale}
+          y={(height + 50) / scale}
+          rotation={rotation}
+        >
           {panCircle}
         </Layer>
       </Stage>
@@ -239,7 +259,6 @@ class Mandachord extends Component {
   };
 
   render() {
-    console.log(this.instrumentPacks[BASS]);
     return (
       <MandachordContainer>
         <CanvasContainer innerRef={this.canvasContainer}>
@@ -250,7 +269,7 @@ class Mandachord extends Component {
             <InstrumentLabel>Percussion</InstrumentLabel>
             <InstrumentDropdown
               onChange={this.handleInstrumentChange(PERCUSSION)}
-              // value={this.instruments[PERCUSSION]}
+              value={this.props.instruments[PERCUSSION]}
               placeholder={'Select an instrument'}
               items={this.instrumentPacks}
             />
@@ -259,7 +278,7 @@ class Mandachord extends Component {
             <InstrumentLabel>Bass</InstrumentLabel>
             <InstrumentDropdown
               onChange={this.handleInstrumentChange(BASS)}
-              // value={this.instruments[BASS]}
+              value={this.props.instruments[BASS]}
               placeholder={'Select an instrument'}
               items={this.instrumentPacks}
             />
@@ -268,7 +287,7 @@ class Mandachord extends Component {
             <InstrumentLabel>Melody</InstrumentLabel>
             <InstrumentDropdown
               onChange={this.handleInstrumentChange(MELODY)}
-              // value={this.instruments[MELODY]}
+              value={this.props.instruments[MELODY]}
               placeholder={'Select an instrument'}
               items={this.instrumentPacks}
             />

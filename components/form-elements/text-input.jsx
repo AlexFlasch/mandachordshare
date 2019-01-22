@@ -5,35 +5,37 @@ import palette from '../../palette';
 import { transition } from '../../styles/constants';
 
 const InputContainer = styled.div`
-& {
-  box-sizing: border-box;
-  color: ${palette.lotusTheme.primary};
-  font-family: 'Teko', sans-serif;
-  font-size: 1.5em;
-  height: 35px;
-  position: relative;
-  width: ${(props) => props.width};
+  & {
+    box-sizing: border-box;
+    color: ${palette.lotusTheme.primary};
+    font-family: 'Teko', sans-serif;
+    font-size: 1.5em;
+    height: 35px;
+    position: relative;
+    width: ${props => props.width};
 
-  &::before {
-    background-image: radial-gradient(ellipse at bottom,
-      ${transparentize(0.7, palette.lotusTheme.secondary)} 0%,
-      transparent 75%);
-    background-position-y: 5px;
-    background-repeat: no-repeat;
-    content: '';
-    height: 100%;
-    left: 0;
-    opacity: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    ${transition};
-  }
+    &::before {
+      background-image: radial-gradient(
+        ellipse at bottom,
+        ${transparentize(0.7, palette.lotusTheme.secondary)} 0%,
+        transparent 75%
+      );
+      background-position-y: 5px;
+      background-repeat: no-repeat;
+      content: '';
+      height: 100%;
+      left: 0;
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      ${transition};
+    }
 
-  &.focused::before {
-    opacity: 1;
+    &.focused::before {
+      opacity: 1;
+    }
   }
-}
 `;
 
 const Input = styled.input`
@@ -63,7 +65,6 @@ const Input = styled.input`
 export const INITIAL_STATE = { isFocused: false, isMounted: false };
 
 export default class TextInput extends Component {
-  
   constructor(props) {
     super(props);
     this.state = INITIAL_STATE;
@@ -73,13 +74,13 @@ export default class TextInput extends Component {
     this.setState({ isFocused: false, isMounted: true });
   }
 
-  setFocus = (isFocused) => () => {
+  setFocus = isFocused => () => {
     this.setState({ isFocused });
-  }
+  };
 
   updatePlaceholder = () => {
     // if ()
-  }
+  };
 
   render() {
     const { isFocused } = this.state;
@@ -90,7 +91,7 @@ export default class TextInput extends Component {
         width={this.props.width}
         className={isFocused ? 'focused' : ''}
       >
-        { this.props.placeholder }
+        {this.props.placeholder}
         <Input
           palette={this.theme}
           onFocus={this.setFocus(true)}
@@ -104,5 +105,5 @@ export default class TextInput extends Component {
 
 TextInput.defaultProps = {
   width: '250px',
-  onChange = () => {},
+  onChange: () => {}
 };
