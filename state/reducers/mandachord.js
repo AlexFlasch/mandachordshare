@@ -1,5 +1,9 @@
 import { PLAY_PAUSE, TOGGLE_NOTE, CHANGE_INSTRUMENT } from '../action-types';
 import { BASS, MELODY, PERCUSSION } from '../constants';
+import {
+  getInstrumentFromPosition,
+  getInstrumentNoteFromPosition
+} from '../../util/instruments';
 
 const createInitialNoteState = () => {
   const steps = 64;
@@ -8,10 +12,14 @@ const createInitialNoteState = () => {
   const notes = {};
   for (let i = 0; i < steps; i++) {
     for (let j = 0; j < notesPerStep; j++) {
+      const instrument = getInstrumentFromPosition(j);
+      const instrumentNote = getInstrumentNoteFromPosition(j);
+
       notes[`${i}:${j}`] = {
         stepPos: i,
         notePos: j,
-        isActive: false
+        isActive: false,
+        sound: `${instrument}-${instrumentNote}`
       };
     }
   }
@@ -19,6 +27,7 @@ const createInitialNoteState = () => {
 };
 
 export const initialState = {
+  playbackTime: 0,
   isPaused: true,
   notes: createInitialNoteState(),
   instruments: {

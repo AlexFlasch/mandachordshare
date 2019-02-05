@@ -13,6 +13,7 @@ import MandachordStep from './mandachord-step';
 import PlayPauseButton from './play-pause-button';
 import Dropdown from '../form-elements/dropdown.jsx';
 import palette from '../../palette';
+import sounds from '../../audio';
 
 // styles
 const MandachordContainer = styled.div`

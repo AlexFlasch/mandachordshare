@@ -32,6 +32,7 @@
     "apollo-server-koa": "^1.4.0",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.9.2",
+    "howler": "^2.1.1",
     "isomorphic-unfetch": "^2.1.1",
     "koa": "^2.5.2",
     "koa-bodyparser": "^4.2.1",

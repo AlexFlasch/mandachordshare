@@ -46,40 +46,48 @@ class MandachordStep extends Component {
     const linePoints = [1.25, 122.5, 2.5, 425];
     const lineColor = '#E4F1FE';
     const lineWidth = 0.5;
-    const isLoopPoint = pos / 16 === 0;
-    const dash = isLoopPoint ? [3, 1] : [];
+    const isLoopPoint = pos === 0;
+    const isBarMarker = pos % 8 === 0 && pos % 16 === 0;
+    const loopDashPattern = isLoopPoint ? [3, 1] : [];
     const barLine = (
       <>
         <Line
           stroke={lineColor}
           strokeWidth={lineWidth}
-          dash={dash}
+          dash={loopDashPattern}
           points={linePoints}
           width={lineWidth}
+          opacity={isBarMarker ? 1 : 0.45}
         />
-        <Text
-          text={`${pos / 16 + 1}`}
-          y={437.5}
-          x={6}
-          rotation={180}
-          fill={palette.lotusTheme.bg}
-          stroke={palette.lotusTheme.bg}
-          strokeWidth={2}
-        />
-        <Text
-          text={`${pos / 16 + 1}`}
-          y={437.5}
-          x={6}
-          rotation={180}
-          fill={lineColor}
-        />
+        {isBarMarker ? (
+          <>
+            {/* text outline, using only stroke produces a very aliased looking text at smaller sizes like this */}
+            <Text
+              text={`${pos / 16 + 1}`}
+              y={437.5}
+              x={6}
+              rotation={180}
+              fill={palette.lotusTheme.bg}
+              stroke={palette.lotusTheme.bg}
+              strokeWidth={2}
+            />
+            {/* the actual white part of the text */}
+            <Text
+              text={`${pos / 16 + 1}`}
+              y={437.5}
+              x={6}
+              rotation={180}
+              fill={lineColor}
+            />
+          </>
+        ) : null}
       </>
     );
 
     return (
       <>
         {notes}
-        {pos % 16 === 0 ? barLine : null}
+        {pos % 8 === 0 ? barLine : null}
       </>
     );
   }

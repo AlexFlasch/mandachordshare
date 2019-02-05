@@ -5,8 +5,10 @@ import withRedux from 'next-redux-wrapper';
 import { makeStore } from '../state/store';
 
 class MandachordApp extends App {
-  static async getInitialProps({Component, ctx}) {
-    const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
+  static async getInitialProps({ Component, ctx }) {
+    const pageProps = Component.getInitialProps
+      ? await Component.getInitialProps(ctx)
+      : {};
 
     return { pageProps };
   }
@@ -17,7 +19,7 @@ class MandachordApp extends App {
     return (
       <Container>
         <Provider store={store}>
-          <Component {...pageProps}></Component>
+          <Component {...pageProps} />
         </Provider>
       </Container>
     );

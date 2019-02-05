@@ -3,9 +3,12 @@ import { Arc } from 'react-konva';
 import { transparentize, lighten } from 'polished';
 
 import { toggleNote } from '../../state/actions/mandachord';
+import {
+  getInstrumentFromPosition,
+  getInstrumentNoteFromPosition
+} from '../../util/instruments';
 
-const MandachordNote = (props) => {
-
+const MandachordNote = props => {
   const getNoteColor = () => {
     const pos = props.notePos;
     let color;
@@ -24,7 +27,7 @@ const MandachordNote = (props) => {
     }
 
     return color;
-  }
+  };
 
   const drawNote = () => {
     const stepHeight = 275;
@@ -35,8 +38,8 @@ const MandachordNote = (props) => {
     // 270deg (start at top) (360 degrees / (16 notes per bar * 4 bars)) * step offset
     const angle = 360 / 64;
     // make size 40 so there's space
-    const innerRadius = panCircleSize + (pos * (stepHeight / notesPerStep));
-    const outerRadius = innerRadius + (stepHeight / notesPerStep);
+    const innerRadius = panCircleSize + pos * (stepHeight / notesPerStep);
+    const outerRadius = innerRadius + stepHeight / notesPerStep;
 
     const color = getNoteColor();
     const strokeColor = color;
@@ -51,24 +54,27 @@ const MandachordNote = (props) => {
         fill={fillColor}
         stroke={strokeColor}
         strokeWidth={1}
-        offsetX={-25 - (pos * 2)}
+        offsetX={-25 - pos * 2}
         angle={angle}
-        onClick={() => props.toggleNote(props.id) }
+        onClick={() => props.toggleNote(props.id)}
       />
     );
-  }
+  };
 
   return drawNote();
-}
+};
 
 const mapStateToProps = (state, props) => {
   const id = `${props.stepPos}:${props.notePos}`;
   const self = state.mandachord.notes[id];
   return { id, isActive: self.isActive };
-}
+};
 
-const mapDispatchToProps = (dispatch) => ({
-  toggleNote: (id) => dispatch(toggleNote(id))
+const mapDispatchToProps = dispatch => ({
+  toggleNote: id => dispatch(toggleNote(id))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MandachordNote);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MandachordNote);
