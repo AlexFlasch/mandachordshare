@@ -1,5 +1,10 @@
-import { PLAY_PAUSE, TOGGLE_NOTE, CHANGE_INSTRUMENT } from '../action-types';
-import { BASS, MELODY, PERCUSSION } from '../constants';
+import {
+  PLAY_PAUSE,
+  TOGGLE_NOTE,
+  CHANGE_INSTRUMENT,
+  UPDATE_PLAYBACK_TIME
+} from '../action-types';
+import { BASS, MELODY, PERCUSSION, MILLISECONDS_PER_LOOP } from '../constants';
 import {
   getInstrumentFromPosition,
   getInstrumentNoteFromPosition
@@ -63,6 +68,20 @@ const mandachord = (state = initialState, { type, payload }) => {
         instruments: {
           [payload.instrumentType]: payload.value
         }
+      };
+
+    case UPDATE_PLAYBACK_TIME:
+      console.log(`total playback time: ${state.playbackTime + payload.delta}`);
+      console.log(
+        `mod 8000: ${(state.playbackTime + payload.delta) %
+          MILLISECONDS_PER_LOOP}`
+      );
+      const newPlaybackTime =
+        (state.playbackTime + payload.delta) % MILLISECONDS_PER_LOOP;
+
+      return {
+        ...state,
+        playbackTime: newPlaybackTime
       };
 
     default:

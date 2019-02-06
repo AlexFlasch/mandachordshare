@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { transparentize } from 'polished';
 import Router from 'next/router';
-import palette from '../../palette';
+import palette from '../../styles/palette';
 
 const sidebarTransition = `
   transition-property: all;
@@ -30,9 +30,11 @@ const SidebarButton = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: radial-gradient(ellipse at bottom,
+    background-image: radial-gradient(
+      ellipse at bottom,
       ${transparentize(0.7, palette.lotusTheme.secondary)} 0%,
-      transparent 75%);
+      transparent 75%
+    );
     opacity: 0;
     ${sidebarTransition};
   }
@@ -96,4 +98,4 @@ export default ({ text, route, children }) => (
     {children}
     <HoverText>{text}</HoverText>
   </SidebarButton>
-)
+);

@@ -2,8 +2,10 @@ import { Component } from 'react';
 import dynamic from 'next/dynamic';
 import styled from 'styled-components';
 import Page from '../layouts/main';
-import palette from '../palette';
+import palette from '../styles/palette';
 import { connect } from 'react-redux';
+
+// import Mandachord from '../components/mandachord';
 
 const Mandachord = dynamic(import('../components/mandachord'), { ssr: false });
 

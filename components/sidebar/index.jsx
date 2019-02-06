@@ -3,7 +3,7 @@ import { withRouter } from 'next/router';
 import SidebarButton from './sidebar-button';
 import HomeIcon from '../../assets/Lotus_Icon.svg';
 import SearchIcon from '../../assets/MagnifyingGlass.svg';
-import palette from '../../palette';
+import palette from '../../styles/palette';
 
 const sidebarClosedWidth = 50;
 const sidebarOpenWidth = 200;
@@ -49,14 +49,10 @@ export default withRouter(() => {
   ];
 
   const renderButton = (button, i) => (
-    <SidebarButton
-      key={i}
-      route={button.route}
-      text={button.name}
-    >
+    <SidebarButton key={i} route={button.route} text={button.name}>
       {button.icon}
     </SidebarButton>
-  )
+  );
 
   return (
     <SidebarContainer>

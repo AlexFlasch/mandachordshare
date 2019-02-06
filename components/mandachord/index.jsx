@@ -1,18 +1,23 @@
 import { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Stage, Layer, Group, Circle, Line } from 'react-konva';
+import { Stage, Layer, Group, Circle, Line, Image } from 'react-konva';
 import ReactAnimationFrame from 'react-animation-frame';
 
 import supportsPassive from '../../util/supportsPassive';
 
 import { BASS, MELODY, PERCUSSION } from './constants';
-import { changeInstrument } from '../../state/actions/mandachord';
+import {
+  changeInstrument,
+  updatePlaybackTime
+} from '../../state/actions/mandachord';
+
+import PanIconSvg from '../../assets/pan_icon.svg';
 
 import MandachordStep from './mandachord-step';
 import PlayPauseButton from './play-pause-button';
 import Dropdown from '../form-elements/dropdown.jsx';
-import palette from '../../palette';
+import palette from '../../styles/palette';
 import sounds from '../../audio';
 
 // styles
@@ -25,6 +30,7 @@ const MandachordContainer = styled.div`
 const CanvasContainer = styled.div`
   height: 100%;
   width: 80%;
+  position: relative;
 `;
 
 const InstrumentContainer = styled.div`
@@ -50,6 +56,18 @@ const InstrumentLabel = styled.span`
 const InstrumentDropdown = styled(Dropdown)`
   width: 100%;
 `;
+
+const StyledPanIconSvg = styled(PanIconSvg)`
+  width: ${({ stageWidth }) => stageWidth / 15}px;
+  height: auto;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 5px;
+  z-index: 2;
+`;
+// end styles
 
 class Mandachord extends Component {
   virtualW = 500;
@@ -122,6 +140,8 @@ class Mandachord extends Component {
       stageRot: prevState.stageRot + rot,
       currentNoteRot: prevState.currentNoteRot + rot
     }));
+
+    this.props.updatePlaybackTime(delta);
   }
 
   startDragging({ evt }) {
@@ -207,6 +227,7 @@ class Mandachord extends Component {
 
     return (
       <Group onMouseDown={this.startDragging}>
+        {/* <Image image={PanIconSvg} /> */}
         <Circle radius={radius} fill={fillColor} />
         <Circle
           radius={radius - 5}
@@ -232,26 +253,29 @@ class Mandachord extends Component {
     const panCircle = this.renderPanCircle();
 
     return (
-      <Stage width={width} height={height} scaleX={scale} scaleY={scale}>
-        <Layer x={10} y={30}>
-          <PlayPauseButton />
-        </Layer>
-        <Layer
-          x={width / 2 / scale}
-          y={(height + 50) / scale}
-          rotation={rotation + 135}
-        >
-          {this.renderCurrentNoteMark()}
-          {steps}
-        </Layer>
-        <Layer
-          x={width / 2 / scale}
-          y={(height + 50) / scale}
-          rotation={rotation}
-        >
-          {panCircle}
-        </Layer>
-      </Stage>
+      <>
+        <StyledPanIconSvg stageWidth={width} />
+        <Stage width={width} height={height} scaleX={scale} scaleY={scale}>
+          <Layer x={10} y={30}>
+            <PlayPauseButton />
+          </Layer>
+          <Layer
+            x={width / 2 / scale}
+            y={(height + 50) / scale}
+            rotation={rotation + 135}
+          >
+            {this.renderCurrentNoteMark()}
+            {steps}
+          </Layer>
+          <Layer
+            x={width / 2 / scale}
+            y={(height + 50) / scale}
+            rotation={rotation}
+          >
+            {panCircle}
+          </Layer>
+        </Stage>
+      </>
     );
   }
 
@@ -302,12 +326,14 @@ class Mandachord extends Component {
 const mapStateToProps = state => {
   return {
     isPaused: state.mandachord.isPaused,
-    instruments: state.mandachord.instruments
+    instruments: state.mandachord.instruments,
+    playbackTime: state.mandachord.playbackTime
   };
 };
 
 const mapDispatchToProps = {
-  changeInstrument
+  changeInstrument,
+  updatePlaybackTime
 };
 
 export default connect(

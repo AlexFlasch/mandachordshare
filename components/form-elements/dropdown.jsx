@@ -1,7 +1,7 @@
 import Select from 'react-select';
 import styled from 'styled-components';
 
-import palette from '../../palette';
+import palette from '../../styles/palette';
 import { transition } from '../../styles/constants';
 
 const DropdownBox = styled(Select)`

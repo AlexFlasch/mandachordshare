@@ -3,10 +3,6 @@ import { Arc } from 'react-konva';
 import { transparentize, lighten } from 'polished';
 
 import { toggleNote } from '../../state/actions/mandachord';
-import {
-  getInstrumentFromPosition,
-  getInstrumentNoteFromPosition
-} from '../../util/instruments';
 
 const MandachordNote = props => {
   const getNoteColor = () => {

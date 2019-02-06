@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { Line, Text } from 'react-konva';
-import palette from '../../palette';
+import palette from '../../styles/palette';
 
 import MandachordNote from './mandachord-note';
 

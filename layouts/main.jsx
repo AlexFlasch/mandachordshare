@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Sidebar from '../components/sidebar';
-import palette from '../palette';
+import palette from '../styles/palette';
 
 const ContentContainer = styled.div`
   box-sizing: border-box;
@@ -15,11 +15,9 @@ const ContentContainer = styled.div`
   }
 `;
 
-export default ({children}) => (
+export default ({ children }) => (
   <>
     <Sidebar />
-    <ContentContainer>
-      {children}
-    </ContentContainer>
+    <ContentContainer>{children}</ContentContainer>
   </>
 );

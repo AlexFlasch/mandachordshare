@@ -1,13 +1,10 @@
 import { createStore } from 'redux';
-import combinedReducers from '../reducers';
+import { devToolsEnhancer } from 'redux-devtools-extension';
+
+import combinedReducers, { rootInitialState } from '../reducers';
 
 const makeStore = () => {
-  return createStore(
-    combinedReducers,
-    typeof window !== 'undefined' &&
-      window.__REDUX_DEVTOOLS_EXTENSION__ &&
-      window.__REDUX_DEVTOOLS_EXTENSION__()
-  );
+  return createStore(combinedReducers, rootInitialState, devToolsEnhancer());
 };
 
 export { makeStore };
