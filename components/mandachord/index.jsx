@@ -296,7 +296,7 @@ class Mandachord extends Component {
   };
 
   render() {
-    console.log('currentActiveNotes: ', this.currentActiveNotes);
+    console.log('currentActiveNotes: ', this.props.currentActiveNotes);
     return (
       <MandachordContainer>
         <CanvasContainer innerRef={this.canvasContainer}>
