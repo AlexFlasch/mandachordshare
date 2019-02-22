@@ -1,19 +1,29 @@
+// import packages
 import { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Stage, Layer, Group, Circle, Line, Image } from 'react-konva';
 import ReactAnimationFrame from 'react-animation-frame';
 
+// import utils
 import supportsPassive from '../../util/supportsPassive';
 
+// import selectors
+import { selectActiveNotesByCurrentStep } from '../../state/selectors/mandachord';
+
+// import constants
 import { BASS, MELODY, PERCUSSION } from './constants';
+
+// import actions
 import {
   changeInstrument,
   updatePlaybackTime
 } from '../../state/actions/mandachord';
 
+// import assets
 import PanIconSvg from '../../assets/pan_icon.svg';
 
+// import components
 import MandachordStep from './mandachord-step';
 import PlayPauseButton from './play-pause-button';
 import Dropdown from '../form-elements/dropdown.jsx';
@@ -58,6 +68,7 @@ const InstrumentDropdown = styled(Dropdown)`
 `;
 
 const StyledPanIconSvg = styled(PanIconSvg)`
+  pointer-events: none;
   width: ${({ stageWidth }) => stageWidth / 15}px;
   height: auto;
   position: absolute;
@@ -65,6 +76,7 @@ const StyledPanIconSvg = styled(PanIconSvg)`
   left: 50%;
   transform: translateX(-50%);
   margin-bottom: 5px;
+  opacity: 0.4;
   z-index: 2;
 `;
 // end styles
@@ -284,6 +296,7 @@ class Mandachord extends Component {
   };
 
   render() {
+    console.log('currentActiveNotes: ', this.currentActiveNotes);
     return (
       <MandachordContainer>
         <CanvasContainer innerRef={this.canvasContainer}>
@@ -327,7 +340,8 @@ const mapStateToProps = state => {
   return {
     isPaused: state.mandachord.isPaused,
     instruments: state.mandachord.instruments,
-    playbackTime: state.mandachord.playbackTime
+    playbackTime: state.mandachord.playbackTime,
+    currentActiveNotes: selectActiveNotesByCurrentStep(state)
   };
 };
 

@@ -1,47 +1,26 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { Line, Text } from 'react-konva';
+import { Line, Text, Group } from 'react-konva';
 import palette from '../../styles/palette';
 
 import MandachordNote from './mandachord-note';
 
-class MandachordStep extends Component {
-  notesPerStep = 13;
+const MandachordStep = props => {
+  const DEBUG_STEP_POS = false;
 
-  constructor(props) {
-    super(props);
+  const notesPerStep = 13;
 
-    this.state = {
-      notesState: Array(this.notesPerStep).fill(false)
-    };
+  const drawStep = () => {
+    const pos = props.pos;
 
-    this.modifyStepNotes = this.modifyStepNotes.bind(this);
-    this.drawStep = this.drawStep.bind(this);
-  }
-
-  modifyStepNotes(pos) {
-    this.setState(prevState => {
-      prevState.notesState.splice(pos, 1, !prevState.notesState[pos]);
-    });
-
-    // serialize active step notes here
-
-    this.forceUpdate();
-  }
-
-  drawStep() {
-    const pos = this.props.pos;
-
-    const posArr = [...Array(this.notesPerStep).keys()];
+    const posArr = [...Array(notesPerStep).keys()];
     const notes = posArr.map(i => (
-      <MandachordNote
-        key={pos * i + i}
-        stepPos={pos}
-        notePos={i}
-        isActive={this.state.notesState[i]}
-        onClick={this.modifyStepNotes}
-      />
+      <MandachordNote key={pos * i + i} stepPos={pos} notePos={i} />
     ));
+
+    const stepMarker = (
+      <Text text={pos.toString()} y={450} x={6} rotation={180} fill="#000" />
+    );
 
     const linePoints = [1.25, 122.5, 2.5, 425];
     const lineColor = '#E4F1FE';
@@ -86,15 +65,14 @@ class MandachordStep extends Component {
 
     return (
       <>
-        {notes}
+        <Group rotation="90">{notes}</Group>
+        {DEBUG_STEP_POS ? stepMarker : null}
         {pos % 8 === 0 ? barLine : null}
       </>
     );
-  }
+  };
 
-  render() {
-    return this.drawStep();
-  }
-}
+  return drawStep();
+};
 
 export default connect()(MandachordStep);

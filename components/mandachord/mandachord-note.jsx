@@ -1,10 +1,12 @@
 import { connect } from 'react-redux';
-import { Arc } from 'react-konva';
+import { Arc, Text } from 'react-konva';
 import { transparentize, lighten } from 'polished';
 
 import { toggleNote } from '../../state/actions/mandachord';
 
 const MandachordNote = props => {
+  const DEBUG_NOTE_POS = false;
+
   const getNoteColor = () => {
     const pos = props.notePos;
     let color;
@@ -44,16 +46,29 @@ const MandachordNote = props => {
       : transparentize(0.6, color);
 
     return (
-      <Arc
-        innerRadius={innerRadius}
-        outerRadius={outerRadius}
-        fill={fillColor}
-        stroke={strokeColor}
-        strokeWidth={1}
-        offsetX={-25 - pos * 2}
-        angle={angle}
-        onClick={() => props.toggleNote(props.id)}
-      />
+      <>
+        <Arc
+          innerRadius={innerRadius}
+          outerRadius={outerRadius}
+          fill={fillColor}
+          stroke={strokeColor}
+          strokeWidth={1}
+          offsetX={-25 - pos * 2}
+          angle={angle}
+          onClick={() => props.toggleNote(props.id)}
+        />
+        {DEBUG_NOTE_POS ? (
+          <Text
+            text={props.id}
+            x={135 + pos * 23}
+            fontSize="7.5"
+            // y={-25 - pos * 2}
+            // offsetX={-25 - pos * 2}
+            rotation={90}
+            fill="#000"
+          />
+        ) : null}
+      </>
     );
   };
 

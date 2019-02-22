@@ -71,11 +71,6 @@ const mandachord = (state = initialState, { type, payload }) => {
       };
 
     case UPDATE_PLAYBACK_TIME:
-      console.log(`total playback time: ${state.playbackTime + payload.delta}`);
-      console.log(
-        `mod 8000: ${(state.playbackTime + payload.delta) %
-          MILLISECONDS_PER_LOOP}`
-      );
       const newPlaybackTime =
         (state.playbackTime + payload.delta) % MILLISECONDS_PER_LOOP;
 
