@@ -11,14 +11,11 @@ import supportsPassive from '../../util/supportsPassive';
 // import selectors
 import { selectActiveNotesByCurrentStep } from '../../state/selectors/mandachord';
 
-// import constants
-import { BASS, MELODY, PERCUSSION } from './constants';
-
 // import actions
-import {
-  changeInstrument,
-  updatePlaybackTime
-} from '../../state/actions/mandachord';
+import { updatePlaybackTime } from '../../state/actions/mandachord';
+
+// import functional pieces
+import SongBuilder from '../../audio/song-builder';
 
 // import assets
 import PanIconSvg from '../../assets/pan_icon.svg';
@@ -26,7 +23,7 @@ import PanIconSvg from '../../assets/pan_icon.svg';
 // import components
 import MandachordStep from './mandachord-step';
 import PlayPauseButton from './play-pause-button';
-import Dropdown from '../form-elements/dropdown.jsx';
+import InstrumentMenu from './instrument-menu';
 import palette from '../../styles/palette';
 import sounds from '../../audio';
 
@@ -41,30 +38,6 @@ const CanvasContainer = styled.div`
   height: 100%;
   width: 80%;
   position: relative;
-`;
-
-const InstrumentContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 20%;
-  padding: 5px;
-`;
-
-const InstrumentSelection = styled.div`
-  padding: 10px 0;
-`;
-
-const InstrumentLabel = styled.span`
-  color: ${palette.lotusTheme.secondary};
-  font-family: 'Teko', sans-serif;
-  font-size: 1.65em;
-  margin-top: 15px;
-  text-transform: uppercase;
-`;
-
-const InstrumentDropdown = styled(Dropdown)`
-  width: 100%;
 `;
 
 const StyledPanIconSvg = styled(PanIconSvg)`
@@ -89,20 +62,11 @@ class Mandachord extends Component {
   dash2 = this.generateRandomDash(3, 50, 20);
   circleAnimStarted = false;
   canvasContainer = createRef();
-  instrumentPacks = [
-    { label: 'Adau', value: 1 },
-    { label: 'Alpha', value: 2 },
-    { label: 'Beta', value: 3 },
-    { label: 'Delta', value: 4 },
-    { label: 'Druk', value: 5 },
-    { label: 'Epsilon', value: 6 },
-    { label: 'Gamma', value: 7 },
-    { label: 'Horus', value: 8 },
-    { label: 'Plokk', value: 9 }
-  ];
 
   constructor(props) {
     super(props);
+
+    // this.songBuilder = new SongBuilder();
 
     this.state = {
       stageWidth: 0,
@@ -215,8 +179,6 @@ class Mandachord extends Component {
   }
 
   renderSteps() {
-    const s = this.state.stageScale;
-
     const posArr = [...Array(this.numSteps).keys()];
     const steps = posArr.map(i => (
       <Group key={i} rotation={i * (360 / this.numSteps)}>
@@ -265,72 +227,37 @@ class Mandachord extends Component {
     const panCircle = this.renderPanCircle();
 
     return (
-      <>
-        <StyledPanIconSvg stageWidth={width} />
-        <Stage width={width} height={height} scaleX={scale} scaleY={scale}>
-          <Layer x={10} y={30}>
-            <PlayPauseButton />
-          </Layer>
-          <Layer
-            x={width / 2 / scale}
-            y={(height + 50) / scale}
-            rotation={rotation + 135}
-          >
-            {this.renderCurrentNoteMark()}
-            {steps}
-          </Layer>
-          <Layer
-            x={width / 2 / scale}
-            y={(height + 50) / scale}
-            rotation={rotation}
-          >
-            {panCircle}
-          </Layer>
-        </Stage>
-      </>
+      <Stage width={width} height={height} scaleX={scale} scaleY={scale}>
+        <Layer x={10} y={30}>
+          <PlayPauseButton />
+        </Layer>
+        <Layer
+          x={width / 2 / scale}
+          y={(height + 50) / scale}
+          rotation={rotation + 135}
+        >
+          {this.renderCurrentNoteMark()}
+          {steps}
+        </Layer>
+        <Layer
+          x={width / 2 / scale}
+          y={(height + 50) / scale}
+          rotation={rotation}
+        >
+          {panCircle}
+        </Layer>
+      </Stage>
     );
   }
 
-  handleInstrumentChange = role => instrument => {
-    this.props.changeInstrument(role, instrument);
-  };
-
   render() {
-    console.log('currentActiveNotes: ', this.props.currentActiveNotes);
     return (
       <MandachordContainer>
+        <StyledPanIconSvg stageWidth={this.state.stageWidth} />
         <CanvasContainer innerRef={this.canvasContainer}>
           {this.renderMandachord()}
         </CanvasContainer>
-        <InstrumentContainer>
-          <InstrumentSelection>
-            <InstrumentLabel>Percussion</InstrumentLabel>
-            <InstrumentDropdown
-              onChange={this.handleInstrumentChange(PERCUSSION)}
-              value={this.props.instruments[PERCUSSION]}
-              placeholder={'Select an instrument'}
-              items={this.instrumentPacks}
-            />
-          </InstrumentSelection>
-          <InstrumentSelection>
-            <InstrumentLabel>Bass</InstrumentLabel>
-            <InstrumentDropdown
-              onChange={this.handleInstrumentChange(BASS)}
-              value={this.props.instruments[BASS]}
-              placeholder={'Select an instrument'}
-              items={this.instrumentPacks}
-            />
-          </InstrumentSelection>
-          <InstrumentSelection>
-            <InstrumentLabel>Melody</InstrumentLabel>
-            <InstrumentDropdown
-              onChange={this.handleInstrumentChange(MELODY)}
-              value={this.props.instruments[MELODY]}
-              placeholder={'Select an instrument'}
-              items={this.instrumentPacks}
-            />
-          </InstrumentSelection>
-        </InstrumentContainer>
+        <InstrumentMenu />
       </MandachordContainer>
     );
   }
@@ -339,14 +266,12 @@ class Mandachord extends Component {
 const mapStateToProps = state => {
   return {
     isPaused: state.mandachord.isPaused,
-    instruments: state.mandachord.instruments,
     playbackTime: state.mandachord.playbackTime,
     currentActiveNotes: selectActiveNotesByCurrentStep(state)
   };
 };
 
 const mapDispatchToProps = {
-  changeInstrument,
   updatePlaybackTime
 };
 

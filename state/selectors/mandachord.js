@@ -33,6 +33,17 @@ export const selectCurrentStep = createSelector(
       }, {})
 );
 
+export const selectActiveNotes = createSelector(
+  mandachordSelector,
+  mandachord =>
+    Object.keys(mandachord.notes)
+      .filter(noteId => mandachord.notes[noteId].isActive)
+      .reduce((obj, key) => {
+        obj[key] = mandachord.notes[key];
+        return obj;
+      }, {})
+);
+
 export const selectNotesByStep = step =>
   createSelector(
     mandachordSelector,
@@ -53,13 +64,6 @@ export const selectActiveNotesByCurrentStep = createSelector(
     const currentActiveNotesByStep = getActiveNotesInStep(
       mandachord,
       currentStep
-    );
-    console.log(
-      'returning: ',
-      Object.keys(currentActiveNotesByStep).reduce((obj, key) => {
-        obj[key] = currentActiveNotesByStep[key];
-        return obj;
-      }, {})
     );
     return Object.keys(currentActiveNotesByStep).reduce((obj, key) => {
       obj[key] = currentActiveNotesByStep[key];

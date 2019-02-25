@@ -44,43 +44,43 @@ export const initialState = {
 
 const mandachord = (state = initialState, { type, payload }) => {
   switch (type) {
-    case PLAY_PAUSE:
-      return {
-        ...state,
-        isPaused: !state.isPaused
-      };
+  case PLAY_PAUSE:
+    return {
+      ...state,
+      isPaused: !state.isPaused
+    };
 
-    case TOGGLE_NOTE:
-      return {
-        ...state,
-        notes: {
-          ...state.notes,
-          [payload.id]: {
-            ...state.notes[payload.id],
-            isActive: !state.notes[payload.id].isActive
-          }
+  case TOGGLE_NOTE:
+    return {
+      ...state,
+      notes: {
+        ...state.notes,
+        [payload.id]: {
+          ...state.notes[payload.id],
+          isActive: !state.notes[payload.id].isActive
         }
-      };
+      }
+    };
 
-    case CHANGE_INSTRUMENT:
-      return {
-        ...state,
-        instruments: {
-          [payload.instrumentType]: payload.value
-        }
-      };
+  case CHANGE_INSTRUMENT:
+    return {
+      ...state,
+      instruments: {
+        [payload.instrumentType]: payload.instrument
+      }
+    };
 
-    case UPDATE_PLAYBACK_TIME:
-      const newPlaybackTime =
+  case UPDATE_PLAYBACK_TIME:
+    const newPlaybackTime =
         (state.playbackTime + payload.delta) % MILLISECONDS_PER_LOOP;
 
-      return {
-        ...state,
-        playbackTime: newPlaybackTime
-      };
+    return {
+      ...state,
+      playbackTime: newPlaybackTime
+    };
 
-    default:
-      return state;
+  default:
+    return state;
   }
 };
 

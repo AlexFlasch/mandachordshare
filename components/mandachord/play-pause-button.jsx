@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import { RegularPolygon, Rect, Group } from 'react-konva';
 
-import store from '../../state/store';
 import { playPauseMandachord } from '../../state/actions/mandachord';
 import palette from '../../styles/palette';
 

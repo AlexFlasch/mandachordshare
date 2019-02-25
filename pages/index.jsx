@@ -5,9 +5,7 @@ import Page from '../layouts/main';
 import palette from '../styles/palette';
 import { connect } from 'react-redux';
 
-// import Mandachord from '../components/mandachord';
-
-const Mandachord = dynamic(import('../components/mandachord'), { ssr: false });
+import Mandachord from '../components/mandachord';
 
 const Title = styled.h1`
   color: ${palette.lotusTheme.accent};
@@ -15,13 +13,15 @@ const Title = styled.h1`
 `;
 
 class IndexPage extends Component {
-  static async getInitialProps({ store, isServer, pathName, query }) {}
+  static async getInitialProps({ store, isServer, pathName, query }) {
+    this.isServer = isServer;
+  }
 
   render() {
     return (
       <Page>
         <Title>I'm Home!</Title>
-        <Mandachord />
+        {this.isServer ? null : <Mandachord />}
       </Page>
     );
   }

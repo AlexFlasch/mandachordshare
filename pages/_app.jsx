@@ -4,6 +4,10 @@ import withRedux from 'next-redux-wrapper';
 
 import { makeStore } from '../state/store';
 
+// Clean this up later?
+// Unsure if there's a better way to make the store available to non-components like song-builder
+let store;
+
 class MandachordApp extends App {
   static async getInitialProps({ Component, ctx }) {
     const pageProps = Component.getInitialProps
@@ -14,7 +18,8 @@ class MandachordApp extends App {
   }
 
   render() {
-    const { Component, pageProps, store } = this.props;
+    const { Component, pageProps } = this.props;
+    store = this.props.store;
 
     return (
       <Container>
@@ -27,3 +32,5 @@ class MandachordApp extends App {
 }
 
 export default withRedux(makeStore)(MandachordApp);
+
+export { store };
