@@ -26,6 +26,7 @@ import PlayPauseButton from './play-pause-button';
 import InstrumentMenu from './instrument-menu';
 import palette from '../../styles/palette';
 import sounds from '../../audio';
+import initSongBuilder from '../../audio/song-builder';
 
 // styles
 const MandachordContainer = styled.div`
@@ -66,7 +67,7 @@ class Mandachord extends Component {
   constructor(props) {
     super(props);
 
-    // this.songBuilder = new SongBuilder();
+    initSongBuilder();
 
     this.state = {
       stageWidth: 0,
@@ -201,7 +202,6 @@ class Mandachord extends Component {
 
     return (
       <Group onMouseDown={this.startDragging}>
-        {/* <Image image={PanIconSvg} /> */}
         <Circle radius={radius} fill={fillColor} />
         <Circle
           radius={radius - 5}
@@ -253,8 +253,8 @@ class Mandachord extends Component {
   render() {
     return (
       <MandachordContainer>
-        <StyledPanIconSvg stageWidth={this.state.stageWidth} />
         <CanvasContainer innerRef={this.canvasContainer}>
+          <StyledPanIconSvg stageWidth={this.state.stageWidth} />
           {this.renderMandachord()}
         </CanvasContainer>
         <InstrumentMenu />

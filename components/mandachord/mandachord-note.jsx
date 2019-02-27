@@ -11,15 +11,15 @@ const MandachordNote = props => {
     const pos = props.notePos;
     let color;
 
-    // note is in metronome section
+    // note is in metronome (melody) section
     if (pos < 5) {
       color = '#F62459';
     }
-    // note is in mallet section
+    // note is in mallet (percussion) section
     else if (pos > 9) {
       color = '#67809F';
     }
-    // note is in resonator section
+    // note is in resonator (bass) section
     else {
       color = '#4B77BE';
     }

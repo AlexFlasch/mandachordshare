@@ -1,24 +1,26 @@
 import { store } from '../pages/_app';
 import { selectActiveNotes } from '../state/selectors/mandachord';
 import { MILISECONDS_PER_STEP } from '../state/constants';
-import { noteRegex, getAudioSpriteForNote } from '../util/helpers';
-
-const copySong = prevSong => prevSong.map(step => step.map(note => note));
+import {
+  noteRegex,
+  getAudioSpriteForNote,
+  getPropertyDiff
+} from '../util/helpers';
 
 // there are always 16 steps per bar, and 4 bars, thus 64 steps total
-const song = [].fill([], 0, 63);
-const previousSong = copySong(song);
+const song = Array(64).fill([]);
+
+let previousActiveNotes;
 
 export default () => {
   const songGenerator = function*() {};
 
-  const modfiySong = activeNotes => {
-    previousSong = copySong(song);
+  const modifySong = activeNotes => {
+    previousActiveNotes = activeNotes;
 
-    // find the notes that need to be removed
-    const notesToBeRemoved = previousSong.map((step, i) =>
-      step.filter(note => song[i].includes)
-    );
+    // get difference between activeNotes and previousNotes 2d arrays
+
+    const notesToRemove = getPropertyDiff(song, previousSong);
 
     Object.keys(activeNotes).forEach(noteId => {
       const note = activeNotes[noteId];
@@ -46,6 +48,6 @@ export default () => {
     modifySong(activeNotes);
   };
 
-  store.subscribe(handlePlayPause);
-  store.subscribe(handleNoteChange);
+  store && store.subscribe(handlePlayPause);
+  store && store.subscribe(handleNoteChange);
 };
