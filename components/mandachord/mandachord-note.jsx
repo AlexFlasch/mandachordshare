@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Arc, Text } from 'react-konva';
 import { transparentize, lighten } from 'polished';
@@ -85,7 +86,18 @@ const mapDispatchToProps = dispatch => ({
   toggleNote: id => dispatch(toggleNote(id))
 });
 
-export default connect(
+const ConnectedNote = connect(
   mapStateToProps,
   mapDispatchToProps
 )(MandachordNote);
+
+ConnectedNote.defaultProps = {};
+
+ConnectedNote.propTypes = {
+  stepPos: PropTypes.number.isRequired,
+  notePos: PropTypes.number.isRequired,
+  isActive: PropTypes.bool,
+  id: PropTypes.string
+};
+
+export default ConnectedNote;

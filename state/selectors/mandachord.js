@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 
-import { MILLISECONDS_PER_NOTE } from '../constants';
-import { noteRegex } from '../../util/helpers';
+import { MILLISECONDS_PER_STEP } from '../constants';
+import { noteRegex, getAudioSpriteForNote } from '../../util/helpers';
 
 // helper functions
 const getActiveNotesInStep = (mandachord, step) => {
@@ -21,11 +21,17 @@ export const mandachordSelector = state => state.mandachord;
 export const selectCurrentStep = createSelector(
   mandachordSelector,
   mandachord =>
+    Math.floor((mandachord.playbackTime % (MILLISECONDS_PER_STEP * 64)) / 64)
+);
+
+export const selectNotesInCurrentStep = createSelector(
+  mandachordSelector,
+  mandachord =>
     Object.keys(mandachord.notes)
       .filter(
         noteId =>
           parseInt(noteId.match(noteRegex).groups.step, 10) ===
-          Math.floor(mandachord.playbackTime / MILLISECONDS_PER_NOTE)
+          Math.floor(mandachord.playbackTime / MILLISECONDS_PER_STEP)
       )
       .reduce((obj, key) => {
         obj[key] = mandachord.notes[key];
@@ -44,6 +50,16 @@ export const selectActiveNotes = createSelector(
       }, {})
 );
 
+export const selectActiveNotesAsAudioSprites = createSelector(
+  selectActiveNotes,
+  activeNotes =>
+    Object.keys(activeNotes).reduce((obj, key) => {
+      const notePos = key.match(noteRegex).groups.note;
+      obj[key] = getAudioSpriteForNote('horos', notePos); // horos hardcoded for now
+      return obj;
+    }, {})
+);
+
 export const selectNotesByStep = step =>
   createSelector(
     mandachordSelector,
@@ -58,7 +74,7 @@ export const selectNotesByStep = step =>
 
 export const selectActiveNotesByCurrentStep = createSelector(
   mandachordSelector,
-  selectCurrentStep,
+  selectNotesInCurrentStep,
   (mandachord, currentStep) => {
     // console.log(activeNotesByStep(currentStep));
     const currentActiveNotesByStep = getActiveNotesInStep(

@@ -35,6 +35,8 @@ export const initialState = {
   playbackTime: 0,
   isPaused: true,
   notes: createInitialNoteState(),
+  lastToggledNote: null,
+  lastToggledState: null,
   instruments: {
     [BASS]: { label: 'Adau', value: 1 },
     [MELODY]: { label: 'Adau', value: 1 },
@@ -53,6 +55,8 @@ const mandachord = (state = initialState, { type, payload }) => {
   case TOGGLE_NOTE:
     return {
       ...state,
+      lastToggledNote: payload.id,
+      lastToggledState: !state.notes[payload.id].isActive,
       notes: {
         ...state.notes,
         [payload.id]: {

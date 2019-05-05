@@ -72,7 +72,7 @@ class Mandachord extends Component {
     this.state = {
       stageWidth: 0,
       stageHeight: 0,
-      stageScale: 0,
+      stageScale: 1,
       stageRot: 0,
       currentNoteRot: 0,
       isDragging: false

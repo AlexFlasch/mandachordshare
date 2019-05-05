@@ -4,7 +4,7 @@ import HorosInstruments from '../assets/sounds/Horos_Instrument_Pack.mp3';
 
 Howler.volume = 1.0;
 
-const timings = {
+const horosTimings = {
   'MELODY-1': [360, 1030],
   'MELODY-2': [1035, 2030],
   'MELODY-3': [2035, 3030],
@@ -22,8 +22,10 @@ const timings = {
 
 const HOROS = new Howl({
   src: [HorosInstruments],
-  sprite: timings
+  sprite: horosTimings
 });
+
+console.log('Horos: ', HOROS);
 
 export default {
   horos: HOROS

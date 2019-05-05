@@ -1,39 +1,48 @@
 import { store } from '../pages/_app';
-import { selectActiveNotes } from '../state/selectors/mandachord';
-import { MILISECONDS_PER_STEP } from '../state/constants';
+import {
+  selectActiveNotes,
+  selectCurrentStep,
+  selectActiveNotesAsAudioSprites
+} from '../state/selectors/mandachord';
+import { MILLISECONDS_PER_STEP } from '../state/constants';
 import {
   noteRegex,
-  getAudioSpriteForNote,
-  getPropertyDiff
+  playAudioSpriteForNote,
+  getAudioSpriteForNote
 } from '../util/helpers';
 
+let isPlaying = false;
+let songPlayInterval;
 // there are always 16 steps per bar, and 4 bars, thus 64 steps total
-const song = Array(64).fill([]);
-
-let previousActiveNotes;
+// fill the empty 64 spaces in the array with undefined, and convert
+// those to empty arrays. Cannot fill with empty arrays directly with
+// .fill() since it will fill each element with a reference to the same
+// array specified in .fill()
+let activeAudioSprites = Array(64)
+  .fill(undefined)
+  .map(_ => []);
+let currentStep = 0;
 
 export default () => {
-  const songGenerator = function*() {};
-
-  const modifySong = activeNotes => {
-    previousActiveNotes = activeNotes;
-
-    // get difference between activeNotes and previousNotes 2d arrays
-
-    const notesToRemove = getPropertyDiff(song, previousSong);
-
-    Object.keys(activeNotes).forEach(noteId => {
-      const note = activeNotes[noteId];
-      const noteMatches = noteId.match(noteRegex);
-      const stepPos = noteMatches.groups.step;
-
-      song[stepPos].push({ noteId, sprite: note.sound });
-    });
+  const songGenerator = function*() {
+    while (true) {
+      yield playAudioSpriteForNote('horos', activeAudioSprites[currentStep]);
+    }
   };
 
-  const playSong = () => {};
+  const playSong = () => {
+    isPlaying = true;
 
-  const stopSong = () => {};
+    songPlayInterval = setInterval(() => {
+      songGenerator().next();
+    }, MILLISECONDS_PER_STEP);
+  };
+
+  const stopSong = () => {
+    isPlaying = false;
+
+    clearInterval(songPlayInterval);
+  };
 
   const handlePlayPause = () => {
     const isPaused = store.getState().mandachord.isPaused;
@@ -43,11 +52,37 @@ export default () => {
 
   const handleNoteChange = () => {
     const state = store.getState();
-    const activeNotes = selectActiveNotes(state);
 
-    modifySong(activeNotes);
+    const sprites = selectActiveNotesAsAudioSprites(state);
+    const { lastToggledNote, lastToggledState } = state.mandachord;
+    const lastToggledNotePos = lastToggledNote.match(noteRegex).groups.note;
+
+    // convert object storing all active note audio sprites into
+    // a 2d array containing all audio sprites that need to play
+    // on each step. Each sub-array represents all audio sprites
+    // for a single step.
+    const index = lastToggledNote.match(noteRegex).groups.step;
+    // TODO: only modify the last toggled note. currently this will only work with adding notes
+    // notes will not be able to be removed
+    if (lastToggledState) {
+      activeAudioSprites[index].push(sprites[lastToggledNote]);
+    } else {
+      activeAudioSprites[index] = activeAudioSprites[index].filter(
+        s => s !== getAudioSpriteForNote('horos', lastToggledNotePos)
+      );
+    }
+  };
+
+  const handleStepChange = () => {
+    const state = store.getState();
+
+    currentStep = selectCurrentStep(state);
+    console.log(currentStep);
   };
 
   store && store.subscribe(handlePlayPause);
   store && store.subscribe(handleNoteChange);
+  store && store.subscribe(handleStepChange);
+
+  while (isPlaying) {}
 };

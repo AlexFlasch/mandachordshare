@@ -65,7 +65,7 @@ const MandachordStep = props => {
 
     return (
       <>
-        <Group rotation="90">{notes}</Group>
+        <Group rotation={90}>{notes}</Group>
         {DEBUG_STEP_POS ? stepMarker : null}
         {pos % 8 === 0 ? barLine : null}
       </>

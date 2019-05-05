@@ -8,5 +8,12 @@ export const getAudioSpriteForNote = (instrument, notePos) => {
   // hardcode horos instrument for now, as that's the only properly recorded instrument pack
   instrument = 'horos';
 
-  return audioSprites[instrument][Object.keys(audioSprites)[notePos]];
+  return Object.keys(audioSprites[instrument]._sprite)[notePos];
+};
+
+export const playAudioSpriteForNote = (instrument, sprite) => {
+  // hardcode horos instrument for now, as that's the only properly recorded instrument pack
+  instrument = 'horos';
+
+  audioSprites[instrument].play(sprite);
 };
