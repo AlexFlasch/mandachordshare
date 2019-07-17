@@ -1,8 +1,7 @@
 {
-  "presets": [
-    "next/babel"
-  ],
+  "presets": ["next/babel"],
   "plugins": [
-    "transform-class-properties"
+    "transform-class-properties",
+    "@babel/plugin-transform-named-capturing-groups-regex"
   ]
 }

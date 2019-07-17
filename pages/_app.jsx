@@ -1,6 +1,6 @@
 import App, { Container } from 'next/app';
-import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
+import { Provider } from 'react-redux';
 
 import { makeStore } from '../state/store';
 
@@ -19,7 +19,7 @@ class MandachordApp extends App {
 
   render() {
     const { Component, pageProps } = this.props;
-    store = this.props.store;
+    ({ store } = this.props);
 
     return (
       <Container>
@@ -31,6 +31,6 @@ class MandachordApp extends App {
   }
 }
 
-export default withRedux(makeStore)(MandachordApp);
-
 export { store };
+
+export default withRedux(makeStore)(MandachordApp);

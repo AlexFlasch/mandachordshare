@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import styled from 'styled-components';
 import { transparentize } from 'polished';
-import palette from '../../palette';
+import palette from '../../styles/palette';
 import { transition } from '../../styles/constants';
 
 const InputContainer = styled.div`

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import palette from '../palette';
+import palette from '../styles/palette';
 import TextInput from '../components/form-elements/text-input';
 
 const PageContainer = styled.div`
@@ -25,17 +25,15 @@ const SiteIconContainer = styled.div`
   height: 100%;
 `;
 
-const LoginFormContainer = styled.div`
-
-`
+const LoginFormContainer = styled.div``;
 
 export default () => (
   <PageContainer>
     <LoginContainer>
-      <SiteIconContainer></SiteIconContainer>
+      <SiteIconContainer />
       <LoginFormContainer>
-        <TextInput placeholder={'testing'}></TextInput>
+        <TextInput placeholder={'testing'} />
       </LoginFormContainer>
     </LoginContainer>
   </PageContainer>
-)
+);

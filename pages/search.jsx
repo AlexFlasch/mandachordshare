@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Page from '../layouts/main';
-import palette from '../palette';
+import palette from '../styles/palette';
 import { withRouter } from 'next/router';
 
 const Title = styled.h1`

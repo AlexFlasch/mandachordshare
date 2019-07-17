@@ -4,6 +4,11 @@ import {
   selectCurrentStep,
   selectActiveNotesAsAudioSprites
 } from '../state/selectors/mandachord';
+import {
+  TOGGLE_NOTE,
+  PLAY_PAUSE,
+  UPDATE_PLAYBACK_TIME
+} from '../state/action-types';
 import { MILLISECONDS_PER_STEP } from '../state/constants';
 import {
   noteRegex,
@@ -23,10 +28,18 @@ let activeAudioSprites = Array(64)
   .map(_ => []);
 let currentStep = 0;
 
+const filteredSubscriber = (store, actionType, listener) => () => {
+  if (store.getState().mandachord.lastAction === actionType) {
+    listener();
+  }
+};
+
 export default () => {
   const songGenerator = function*() {
     while (true) {
-      yield playAudioSpriteForNote('horos', activeAudioSprites[currentStep]);
+      if (activeAudioSprites[currentStep].length > 0) {
+        yield playAudioSpriteForNote('horos', activeAudioSprites[currentStep]);
+      } else yield;
     }
   };
 
@@ -77,12 +90,15 @@ export default () => {
     const state = store.getState();
 
     currentStep = selectCurrentStep(state);
-    console.log(currentStep);
+    console.log('currentStep: ', currentStep);
   };
 
-  store && store.subscribe(handlePlayPause);
-  store && store.subscribe(handleNoteChange);
-  store && store.subscribe(handleStepChange);
-
-  while (isPlaying) {}
+  store &&
+    store.subscribe(filteredSubscriber(store, PLAY_PAUSE, handlePlayPause));
+  store &&
+    store.subscribe(filteredSubscriber(store, TOGGLE_NOTE, handleNoteChange));
+  store &&
+    store.subscribe(
+      filteredSubscriber(store, UPDATE_PLAYBACK_TIME, handleStepChange)
+    );
 };

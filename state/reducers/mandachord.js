@@ -35,8 +35,10 @@ export const initialState = {
   playbackTime: 0,
   isPaused: true,
   notes: createInitialNoteState(),
+  // TODO: keeping track of the last thing is an anti-pattern. look into moving song-builder to redux-sagas
   lastToggledNote: null,
   lastToggledState: null,
+  lastAction: '',
   instruments: {
     [BASS]: { label: 'Adau', value: 1 },
     [MELODY]: { label: 'Adau', value: 1 },
@@ -49,12 +51,14 @@ const mandachord = (state = initialState, { type, payload }) => {
   case PLAY_PAUSE:
     return {
       ...state,
+      lastAction: type,
       isPaused: !state.isPaused
     };
 
   case TOGGLE_NOTE:
     return {
       ...state,
+      lastAction: type,
       lastToggledNote: payload.id,
       lastToggledState: !state.notes[payload.id].isActive,
       notes: {
@@ -69,17 +73,23 @@ const mandachord = (state = initialState, { type, payload }) => {
   case CHANGE_INSTRUMENT:
     return {
       ...state,
+      lastAction: type,
       instruments: {
         [payload.instrumentType]: payload.instrument
       }
     };
 
   case UPDATE_PLAYBACK_TIME:
-    const newPlaybackTime =
+    let newPlaybackTime =
         (state.playbackTime + payload.delta) % MILLISECONDS_PER_LOOP;
+
+    if (newPlaybackTime >= MILLISECONDS_PER_LOOP) {
+      newPlaybackTime -= MILLISECONDS_PER_LOOP;
+    }
 
     return {
       ...state,
+      lastAction: type,
       playbackTime: newPlaybackTime
     };
 

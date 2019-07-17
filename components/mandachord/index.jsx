@@ -1,6 +1,6 @@
 // import packages
 import { Component, createRef } from 'react';
-import { connect } from 'react-redux';
+import { ReactReduxContext, Provider, connect } from 'react-redux';
 import styled from 'styled-components';
 import { Stage, Layer, Group, Circle, Line, Image } from 'react-konva';
 import ReactAnimationFrame from 'react-animation-frame';
@@ -62,7 +62,7 @@ class Mandachord extends Component {
   dash1 = this.generateRandomDash(1, 25, 15);
   dash2 = this.generateRandomDash(3, 50, 20);
   circleAnimStarted = false;
-  canvasContainer = createRef();
+  canvasContainerEl = createRef();
 
   constructor(props) {
     super(props);
@@ -92,8 +92,8 @@ class Mandachord extends Component {
   }
 
   resizeMandachord() {
-    let w = this.canvasContainer.current.clientWidth;
-    let h = this.canvasContainer.current.clientHeight;
+    let w = this.canvasContainerEl.current.clientWidth;
+    let h = this.canvasContainerEl.current.clientHeight;
 
     let s = Math.min(w / this.virtualW, h / this.virtualH);
 
@@ -226,34 +226,44 @@ class Mandachord extends Component {
     const steps = this.renderSteps();
     const panCircle = this.renderPanCircle();
 
+    // ReactReduxContext and Provider from react-redux are dumb hacks
+    // required to support react-reudx 6.0+ inside of react-konva
+    // keep an eye on this issue (https://github.com/konvajs/react-konva/issues/311)
+    // for when they (hopefully) update their stupid useful canvas library
     return (
-      <Stage width={width} height={height} scaleX={scale} scaleY={scale}>
-        <Layer x={10} y={30}>
-          <PlayPauseButton />
-        </Layer>
-        <Layer
-          x={width / 2 / scale}
-          y={(height + 50) / scale}
-          rotation={rotation + 135}
-        >
-          {this.renderCurrentNoteMark()}
-          {steps}
-        </Layer>
-        <Layer
-          x={width / 2 / scale}
-          y={(height + 50) / scale}
-          rotation={rotation}
-        >
-          {panCircle}
-        </Layer>
-      </Stage>
+      <ReactReduxContext.Consumer>
+        {({ store }) => (
+          <Stage width={width} height={height} scaleX={scale} scaleY={scale}>
+            <Provider store={store}>
+              <Layer x={10} y={30}>
+                <PlayPauseButton />
+              </Layer>
+              <Layer
+                x={width / 2 / scale}
+                y={(height + 50) / scale}
+                rotation={rotation + 135}
+              >
+                {this.renderCurrentNoteMark()}
+                {steps}
+              </Layer>
+              <Layer
+                x={width / 2 / scale}
+                y={(height + 50) / scale}
+                rotation={rotation}
+              >
+                {panCircle}
+              </Layer>
+            </Provider>
+          </Stage>
+        )}
+      </ReactReduxContext.Consumer>
     );
   }
 
   render() {
     return (
       <MandachordContainer>
-        <CanvasContainer innerRef={this.canvasContainer}>
+        <CanvasContainer ref={this.canvasContainerEl}>
           <StyledPanIconSvg stageWidth={this.state.stageWidth} />
           {this.renderMandachord()}
         </CanvasContainer>
