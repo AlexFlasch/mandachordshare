@@ -25,7 +25,8 @@ const HOROS = new Howl({
   sprite: horosTimings
 });
 
-console.log('Horos: ', HOROS);
+// eslint-disable-next-line no-console
+// console.log('Horos: ', HOROS);
 
 export default {
   horos: HOROS

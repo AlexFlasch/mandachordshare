@@ -5,4 +5,4 @@ export default {
     secondary: '#fff1bf',
     accent: '#8f2670'
   }
-}
+};

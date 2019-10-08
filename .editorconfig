@@ -1,6 +1,6 @@
 [*]
 end_of_line = lf
 
-[*.{js,jsx}]
+[*.{js,jsx,json}]
 indent_style = space
 indent_size = 2

@@ -18,13 +18,13 @@ export const getInstrumentNoteFromPosition = position => {
   const instrument = getInstrumentFromPosition(position);
 
   switch (instrument) {
-    case MELODY:
-      return position + 1;
+  case MELODY:
+    return position + 1;
 
-    case BASS:
-      return position - 5 + 1;
+  case BASS:
+    return position - 5 + 1;
 
-    case PERCUSSION:
-      return position - 10 + 1;
+  case PERCUSSION:
+    return position - 10 + 1;
   }
 };

@@ -4,8 +4,8 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 module.exports = {
   webpack(config, options) {
     // Do not run type checking twice:
-    if (options.isServer) {
-    }
+    // if (options.isServer) {
+    // }
 
     config.node = {
       fs: 'empty'

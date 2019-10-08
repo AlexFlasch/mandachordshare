@@ -1,10 +1,23 @@
-import { createStore } from 'redux';
-import { devToolsEnhancer } from 'redux-devtools-extension';
+import { createStore, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import createSagaMiddleware from 'redux-saga';
 
-import combinedReducers, { rootInitialState } from '../reducers';
+import combinedReducers from '../reducers';
+
+import rootSaga from '../sagas/rootSaga';
 
 const makeStore = () => {
-  return createStore(combinedReducers, rootInitialState, devToolsEnhancer());
+  const sagaMiddleware = createSagaMiddleware();
+  const middleware = [sagaMiddleware];
+
+  const store = createStore(
+    combinedReducers,
+    composeWithDevTools(applyMiddleware(...middleware))
+  );
+
+  sagaMiddleware.run(rootSaga);
+
+  return store;
 };
 
 export { makeStore };

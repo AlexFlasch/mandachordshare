@@ -37,7 +37,7 @@ const filteredSubscriber = (store, actionType, listener) => () => {
 export default () => {
   const songGenerator = function*() {
     while (true) {
-      if (activeAudioSprites[currentStep].length > 0) {
+      if (activeAudioSprites[currentStep % 64].length > 0) {
         yield playAudioSpriteForNote('horos', activeAudioSprites[currentStep]);
       } else yield;
     }
