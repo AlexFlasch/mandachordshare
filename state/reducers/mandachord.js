@@ -2,7 +2,8 @@ import {
   PLAY_PAUSE,
   TOGGLE_NOTE,
   CHANGE_INSTRUMENT,
-  UPDATE_PLAYBACK_TIME
+  UPDATE_PLAYBACK_TIME,
+  SET_CLIENT_IS_LOADED
 } from '../action-types';
 import { BASS, MELODY, PERCUSSION, MILLISECONDS_PER_LOOP } from '../constants';
 import {
@@ -32,6 +33,7 @@ const createInitialNoteState = () => {
 };
 
 export const initialState = {
+  isClientLoaded: false,
   playbackTime: 0,
   isPaused: true,
   notes: createInitialNoteState(),
@@ -48,53 +50,59 @@ export const initialState = {
 
 const mandachord = (state = initialState, { type, payload }) => {
   switch (type) {
-  case PLAY_PAUSE:
-    return {
-      ...state,
-      lastAction: type,
-      isPaused: !state.isPaused
-    };
+    case PLAY_PAUSE:
+      return {
+        ...state,
+        lastAction: type,
+        isPaused: !state.isPaused
+      };
 
-  case TOGGLE_NOTE:
-    return {
-      ...state,
-      lastAction: type,
-      lastToggledNote: payload.id,
-      lastToggledState: !state.notes[payload.id].isActive,
-      notes: {
-        ...state.notes,
-        [payload.id]: {
-          ...state.notes[payload.id],
-          isActive: !state.notes[payload.id].isActive
+    case TOGGLE_NOTE:
+      return {
+        ...state,
+        lastAction: type,
+        lastToggledNote: payload.id,
+        lastToggledState: !state.notes[payload.id].isActive,
+        notes: {
+          ...state.notes,
+          [payload.id]: {
+            ...state.notes[payload.id],
+            isActive: !state.notes[payload.id].isActive
+          }
         }
-      }
-    };
+      };
 
-  case CHANGE_INSTRUMENT:
-    return {
-      ...state,
-      lastAction: type,
-      instruments: {
-        [payload.instrumentType]: payload.instrument
-      }
-    };
+    case CHANGE_INSTRUMENT:
+      return {
+        ...state,
+        lastAction: type,
+        instruments: {
+          [payload.instrumentType]: payload.instrument
+        }
+      };
 
-  case UPDATE_PLAYBACK_TIME:
-    let newPlaybackTime =
+    case UPDATE_PLAYBACK_TIME:
+      let newPlaybackTime =
         (state.playbackTime + payload.delta) % MILLISECONDS_PER_LOOP;
 
-    if (newPlaybackTime >= MILLISECONDS_PER_LOOP) {
-      newPlaybackTime -= MILLISECONDS_PER_LOOP;
-    }
+      if (newPlaybackTime >= MILLISECONDS_PER_LOOP) {
+        newPlaybackTime -= MILLISECONDS_PER_LOOP;
+      }
 
-    return {
-      ...state,
-      lastAction: type,
-      playbackTime: newPlaybackTime
-    };
+      return {
+        ...state,
+        lastAction: type,
+        playbackTime: newPlaybackTime
+      };
 
-  default:
-    return state;
+    case SET_CLIENT_IS_LOADED:
+      return {
+        ...state,
+        isClientLoaded: payload
+      };
+
+    default:
+      return state;
   }
 };
 

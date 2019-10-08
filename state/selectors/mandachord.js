@@ -21,8 +21,7 @@ export const mandachordSelector = state => state.mandachord;
 
 export const selectCurrentStep = createSelector(
   mandachordSelector,
-  mandachord =>
-    Math.floor((mandachord.playbackTime % (MILLISECONDS_PER_STEP * 64)) / 64)
+  mandachord => Math.floor(mandachord.playbackTime / MILLISECONDS_PER_STEP)
 );
 
 export const selectNotesInCurrentStep = createSelector(
@@ -123,10 +122,12 @@ export const selectInstrumentSprites = createSelector(
     */
 
     // hardcoded for now while only Horos pack is available
-    return {
+    const audioSprites = {
       bass: AudioSprites.horos,
       melody: AudioSprites.horos,
       percussion: AudioSprites.horos
     };
+
+    return mandachord.isClientLoaded ? audioSprites : {};
   }
 );

@@ -12,7 +12,10 @@ import supportsPassive from '../../util/supportsPassive';
 import { selectActiveNotesByCurrentStep } from '../../state/selectors/mandachord';
 
 // import actions
-import { updatePlaybackTime } from '../../state/actions/mandachord';
+import {
+  updatePlaybackTime,
+  setIsClientLoaded
+} from '../../state/actions/mandachord';
 
 // import functional pieces
 import SongBuilder from '../../audio/song-builder';
@@ -82,6 +85,7 @@ class Mandachord extends Component {
   }
 
   componentDidMount() {
+    this.props.setIsClientLoaded(true);
     this.resizeMandachord();
 
     window.addEventListener('resize', this.resizeMandachord);
@@ -282,7 +286,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  updatePlaybackTime
+  updatePlaybackTime,
+  setIsClientLoaded
 };
 
 export default connect(

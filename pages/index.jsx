@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import Page from '../layouts/main';
 import { connect } from 'react-redux';
 
@@ -6,6 +6,7 @@ import Mandachord from '../components/mandachord';
 
 class IndexPage extends Component {
   static async getInitialProps({ isServer }) {
+    console.log('isServer: ', isServer);
     this.isServer = isServer;
   }
 
@@ -14,4 +15,4 @@ class IndexPage extends Component {
   }
 }
 
-export default connect()(IndexPage);
+export default IndexPage;
