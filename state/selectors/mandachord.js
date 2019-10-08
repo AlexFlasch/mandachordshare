@@ -2,6 +2,7 @@ import { createSelector } from 'reselect';
 
 import { MILLISECONDS_PER_STEP } from '../constants';
 import { noteRegex, getAudioSpriteForNote } from '../../util/helpers';
+import AudioSprites from '../../audio/index';
 
 // helper functions
 const getActiveNotesInStep = (mandachord, step) => {
@@ -85,5 +86,47 @@ export const selectActiveNotesByCurrentStep = createSelector(
       obj[key] = currentActiveNotesByStep[key];
       return obj;
     }, {});
+  }
+);
+
+export const selectNotesAsSong = createSelector(
+  mandachordSelector,
+  selectActiveNotes,
+  (mandachord, activeNotes) => {
+    const song = Array(64)
+      .fill(undefined)
+      .map(() => []);
+
+    Object.keys(activeNotes).forEach(key => {
+      const stepPos = key.match(noteRegex).groups.step;
+      song[stepPos].push(activeNotes[key]);
+    });
+
+    return song;
+  }
+);
+
+export const selectInstrumentSprites = createSelector(
+  mandachordSelector,
+  mandachord => {
+    /*
+      const { instruments: { BASS, MELODY, PERCUSSION } } = mandachord;
+      const bassSprites = AudioSprites[BASS];
+      const melodySprites = AudioSprites[MELODY];
+      const percussionSprites = AudioSprites[PERCUSSION];
+
+      return {
+        bass: bassSprites,
+        melody: melodySprites,
+        percussion: percussionSprites,
+      }
+    */
+
+    // hardcoded for now while only Horos pack is available
+    return {
+      bass: AudioSprites.horos,
+      melody: AudioSprites.horos,
+      percussion: AudioSprites.horos
+    };
   }
 );

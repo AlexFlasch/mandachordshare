@@ -1,11 +1,13 @@
 import { Howl, Howler } from 'howler';
 
-import HorosInstruments from '../assets/sounds/Horos_Instrument_Pack.mp3';
+// import HorosInstruments from '../assets/sounds/Horos_Instrument_Pack.mp3';
+
+const HorosInstruments = '/static/Horos_Instrument_Pack.mp3';
 
 Howler.volume = 1.0;
 
 const horosTimings = {
-  'MELODY-1': [360, 1030],
+  'MELODY-1': [360, 700],
   'MELODY-2': [1035, 2030],
   'MELODY-3': [2035, 3030],
   'MELODY-4': [3035, 4030],
@@ -25,8 +27,7 @@ const HOROS = new Howl({
   sprite: horosTimings
 });
 
-// eslint-disable-next-line no-console
-// console.log('Horos: ', HOROS);
+HOROS.play('MELODY-1');
 
 export default {
   horos: HOROS

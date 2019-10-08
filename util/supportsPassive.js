@@ -9,8 +9,10 @@ try {
 
   const noop = () => {};
 
-  window.addEventListener('testPassive', noop, opts);
-  window.removeEventListener('testPassive', noop, opts);
+  if (window) {
+    window.addEventListener('testPassive', noop, opts);
+    window.removeEventListener('testPassive', noop, opts);
+  }
 } catch (e) {
   // eslint-disable-next-line no-console
   console.log(e);

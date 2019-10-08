@@ -67,7 +67,7 @@ class Mandachord extends Component {
   constructor(props) {
     super(props);
 
-    initSongBuilder();
+    // initSongBuilder();
 
     this.state = {
       stageWidth: 0,
