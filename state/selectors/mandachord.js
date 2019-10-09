@@ -18,6 +18,7 @@ const getActiveNotesInStep = (mandachord, step) => {
 
 // selectors
 export const mandachordSelector = state => state.mandachord;
+export const selectIsPlaying = state => !state.mandachord.isPaused;
 
 export const selectCurrentStep = createSelector(
   mandachordSelector,

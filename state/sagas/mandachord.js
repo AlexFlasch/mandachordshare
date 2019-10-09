@@ -1,33 +1,64 @@
-import { takeLatest, select } from 'redux-saga/effects';
+import { takeLatest, call, select } from 'redux-saga/effects';
 import {
   selectCurrentStep,
-  selectInstrumentSprites,
-  selectNotesAsSong
+  // selectInstrumentSprites,
+  selectNotesAsSong,
+  selectIsPlaying
 } from '../selectors/mandachord';
-import { getInstrumentTypeForNote } from '../../util/helpers';
+// import { getInstrumentTypeForNote } from '../../util/helpers';
+import createAudioScheduler from '../../audio/audio-scheduler';
 
-import { UPDATE_PLAYBACK_TIME } from '../action-types';
+import {
+  UPDATE_PLAYBACK_TIME,
+  PLAY_PAUSE,
+  TOGGLE_NOTE,
+  SET_CLIENT_IS_LOADED,
+  CHANGE_INSTRUMENT
+} from '../action-types';
 
-// is this an anti-pattern? investigate further
-let lastStep;
+let audioScheduler;
 
-function* playSong() {
-  const currentStep = yield select(selectCurrentStep);
-  const instrumentSprites = yield select(selectInstrumentSprites);
+// function* playSong() {
+//   const currentStep = yield select(selectCurrentStep);
+//   const instrumentSprites = yield select(selectInstrumentSprites);
+//   const song = yield select(selectNotesAsSong);
+
+//   if (song[currentStep].length > 0 && currentStep !== lastStep) {
+//     song[currentStep].forEach(note => {
+//       const instrument = getInstrumentTypeForNote(note.sound).toLowerCase();
+//       instrumentSprites[instrument].play(note.sound);
+//     });
+//   }
+
+//   lastStep = currentStep;
+// }
+
+function* initializeAudioScheduler() {
+  audioScheduler = yield call(createAudioScheduler);
+}
+
+function* playPauseAudioScheduler() {
+  const isPlaying = yield select(selectIsPlaying);
+
+  yield call(audioScheduler.playPause, isPlaying);
+}
+
+function* updateAudioSchedulerSteps() {
   const song = yield select(selectNotesAsSong);
 
-  if (song[currentStep].length > 0 && currentStep !== lastStep) {
-    song[currentStep].forEach(note => {
-      console.log('attempting to play: ', note.sound);
-      const instrument = getInstrumentTypeForNote(note.sound).toLowerCase();
-      instrumentSprites[instrument].play(note.sound);
-    });
-    // playAudioSpriteForNote('horos', );
-  }
+  yield call(audioScheduler.updateAllSteps, song);
+}
 
-  lastStep = currentStep;
+function* updateAudioSchedulerCurrentStep() {
+  const currentStep = yield select(selectCurrentStep);
+
+  yield call(audioScheduler.updateCurrentStep, currentStep);
 }
 
 export default function* mandachordSaga() {
-  yield takeLatest(UPDATE_PLAYBACK_TIME, playSong);
+  yield takeLatest(SET_CLIENT_IS_LOADED, initializeAudioScheduler);
+  yield takeLatest();
+  yield takeLatest(UPDATE_PLAYBACK_TIME, updateAudioSchedulerCurrentStep);
+  yield takeLatest(PLAY_PAUSE, playPauseAudioScheduler);
+  yield takeLatest(TOGGLE_NOTE, updateAudioSchedulerSteps);
 }

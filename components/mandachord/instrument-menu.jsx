@@ -36,55 +36,62 @@ const InstrumentDropdown = styled(Dropdown)`
   width: 100%;
 `;
 
-const handleInstrumentChange = role => instrument => {
-  this.props.changeInstrument({
-    instrumentType: role,
-    instrument: instrument.value
-  });
+const InstrumentMenu = props => {
+  // move this out to a constants file eventually
+  const instrumentPacks = [
+    { label: 'Adau', value: 'ADAU' },
+    { label: 'Alpha', value: 'ALPHA' },
+    { label: 'Beta', value: 'BETA' },
+    { label: 'Delta', value: 'DELTA' },
+    { label: 'Druk', value: 'DRUK' },
+    { label: 'Epsilon', value: 'EPSILON' },
+    { label: 'Gamma', value: 'GAMMA' },
+    { label: 'Horos', value: 'HOROS' },
+    { label: 'Plokk', value: 'PLOKK' }
+  ];
+
+  // TODO: the action/reducer case isn't working properly for this
+  // this should be top priority so we can properly send instruments
+  // to the audio scheduler via sagas.
+  const handleInstrumentChange = role => instrument => {
+    console.log('role: ', role);
+    console.log('instrument: ', instrument);
+    props.changeInstrument({
+      instrumentType: role,
+      instrument: instrument.value
+    });
+  };
+
+  return (
+    <InstrumentContainer>
+      <InstrumentSelection>
+        <InstrumentLabel>Percussion</InstrumentLabel>
+        <InstrumentDropdown
+          onChange={handleInstrumentChange(PERCUSSION)}
+          value={props.instruments[PERCUSSION]}
+          items={instrumentPacks}
+        />
+      </InstrumentSelection>
+      <InstrumentSelection>
+        <InstrumentLabel>Bass</InstrumentLabel>
+        <InstrumentDropdown
+          onChange={handleInstrumentChange(BASS)}
+          value={props.instruments[BASS]}
+          items={instrumentPacks}
+        />
+      </InstrumentSelection>
+      <InstrumentSelection>
+        <InstrumentLabel>Melody</InstrumentLabel>
+        <InstrumentDropdown
+          onChange={handleInstrumentChange(MELODY)}
+          value={props.instruments[MELODY]}
+          placeholder={'Select an instrument'}
+          items={instrumentPacks}
+        />
+      </InstrumentSelection>
+    </InstrumentContainer>
+  );
 };
-
-// move this out to a constants file eventually
-const instrumentPacks = [
-  { label: 'Adau', value: 'ADAU' },
-  { label: 'Alpha', value: 'ALPHA' },
-  { label: 'Beta', value: 'BETA' },
-  { label: 'Delta', value: 'DELTA' },
-  { label: 'Druk', value: 'DRUK' },
-  { label: 'Epsilon', value: 'EPSILON' },
-  { label: 'Gamma', value: 'GAMMA' },
-  { label: 'Horos', value: 'HOROS' },
-  { label: 'Plokk', value: 'PLOKK' }
-];
-
-const InstrumentMenu = props => (
-  <InstrumentContainer>
-    <InstrumentSelection>
-      <InstrumentLabel>Percussion</InstrumentLabel>
-      <InstrumentDropdown
-        onChange={handleInstrumentChange(PERCUSSION)}
-        value={props.instruments[PERCUSSION]}
-        items={instrumentPacks}
-      />
-    </InstrumentSelection>
-    <InstrumentSelection>
-      <InstrumentLabel>Bass</InstrumentLabel>
-      <InstrumentDropdown
-        onChange={handleInstrumentChange(BASS)}
-        value={props.instruments[BASS]}
-        items={instrumentPacks}
-      />
-    </InstrumentSelection>
-    <InstrumentSelection>
-      <InstrumentLabel>Melody</InstrumentLabel>
-      <InstrumentDropdown
-        onChange={handleInstrumentChange(MELODY)}
-        value={props.instruments[MELODY]}
-        placeholder={'Select an instrument'}
-        items={instrumentPacks}
-      />
-    </InstrumentSelection>
-  </InstrumentContainer>
-);
 
 const mapStateToProps = state => ({
   instruments: state.mandachord.instruments

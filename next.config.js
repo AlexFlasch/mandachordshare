@@ -34,6 +34,17 @@ module.exports = {
     //   loader: 'ts-loader'
     // });
 
+    config.module.rules.push({
+      test: /\.worker\.js$/,
+      loader: 'worker-loader',
+      options: {
+        name: 'static/[hash].worker.js',
+        publicPath: '/_next/'
+      }
+    });
+
+    config.output.globalObject = '(typeof self !== "undefined" ? self : this)';
+
     return config;
   }
 };

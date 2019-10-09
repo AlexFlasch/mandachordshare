@@ -72,6 +72,7 @@ const mandachord = (state = initialState, { type, payload }) => {
         }
       };
 
+    // TODO: this isn't reducing properly, investigate
     case CHANGE_INSTRUMENT:
       return {
         ...state,
