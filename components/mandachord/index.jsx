@@ -17,9 +17,6 @@ import {
   setIsClientLoaded
 } from '../../state/actions/mandachord';
 
-// import functional pieces
-import SongBuilder from '../../audio/song-builder';
-
 // import assets
 import PanIconSvg from '../../assets/pan_icon.svg';
 
@@ -28,8 +25,6 @@ import MandachordStep from './mandachord-step';
 import PlayPauseButton from './play-pause-button';
 import InstrumentMenu from './instrument-menu';
 import palette from '../../styles/palette';
-import sounds from '../../audio';
-import initSongBuilder from '../../audio/song-builder';
 
 // styles
 const MandachordContainer = styled.div`
@@ -69,8 +64,6 @@ class Mandachord extends Component {
 
   constructor(props) {
     super(props);
-
-    // initSongBuilder();
 
     this.state = {
       stageWidth: 0,

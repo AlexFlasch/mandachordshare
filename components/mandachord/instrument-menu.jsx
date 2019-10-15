@@ -54,13 +54,13 @@ const InstrumentMenu = props => {
   // this should be top priority so we can properly send instruments
   // to the audio scheduler via sagas.
   const handleInstrumentChange = role => instrument => {
-    console.log('role: ', role);
-    console.log('instrument: ', instrument);
     props.changeInstrument({
       instrumentType: role,
       instrument: instrument.value
     });
   };
+
+  console.log('instruments: ', props.instruments);
 
   return (
     <InstrumentContainer>

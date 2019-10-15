@@ -1,7 +1,7 @@
 import { takeLatest, call, select } from 'redux-saga/effects';
 import {
   selectCurrentStep,
-  // selectInstrumentSprites,
+  selectInstrumentSprites,
   selectNotesAsSong,
   selectIsPlaying
 } from '../selectors/mandachord';
@@ -46,6 +46,7 @@ function* playPauseAudioScheduler() {
 function* updateAudioSchedulerSteps() {
   const song = yield select(selectNotesAsSong);
 
+  console.log('sending all steps to scheduler: ', song);
   yield call(audioScheduler.updateAllSteps, song);
 }
 
@@ -55,9 +56,15 @@ function* updateAudioSchedulerCurrentStep() {
   yield call(audioScheduler.updateCurrentStep, currentStep);
 }
 
+function* updateAudioSchedulerInstruments() {
+  const instrumentSprites = yield select(selectInstrumentSprites);
+
+  yield call(audioScheduler.updateInstruments, instrumentSprites);
+}
+
 export default function* mandachordSaga() {
   yield takeLatest(SET_CLIENT_IS_LOADED, initializeAudioScheduler);
-  yield takeLatest();
+  yield takeLatest(CHANGE_INSTRUMENT, updateAudioSchedulerCurrentStep);
   yield takeLatest(UPDATE_PLAYBACK_TIME, updateAudioSchedulerCurrentStep);
   yield takeLatest(PLAY_PAUSE, playPauseAudioScheduler);
   yield takeLatest(TOGGLE_NOTE, updateAudioSchedulerSteps);

@@ -11,7 +11,6 @@ const pause = () => {
 };
 
 self.addEventListener('message', e => {
-  console.log('scheduler worker recieved: ', e.data);
   if (e.data.interval) {
     interval = e.data.interval;
     if (timerId) {

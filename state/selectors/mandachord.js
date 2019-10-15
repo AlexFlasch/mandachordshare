@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 
 import { MILLISECONDS_PER_STEP } from '../constants';
 import { noteRegex, getAudioSpriteForNote } from '../../util/helpers';
-import AudioSprites from '../../audio/index';
+import AudioSprites from '../../audio/audio-sprites';
 
 // helper functions
 const getActiveNotesInStep = (mandachord, step) => {

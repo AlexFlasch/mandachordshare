@@ -11,7 +11,10 @@ import {
   getInstrumentNoteFromPosition
 } from '../../util/instruments';
 
-const createInitialNoteState = () => {
+// note states for testing
+import { fastBassBeat } from '../../util/test-note-states';
+
+export const createInitialNoteState = () => {
   const steps = 64;
   const notesPerStep = 13;
 
@@ -36,7 +39,8 @@ export const initialState = {
   isClientLoaded: false,
   playbackTime: 0,
   isPaused: true,
-  notes: createInitialNoteState(),
+  // notes: createInitialNoteState(),
+  notes: fastBassBeat,
   // TODO: keeping track of the last thing is an anti-pattern. look into moving song-builder to redux-sagas
   lastToggledNote: null,
   lastToggledState: null,
@@ -74,6 +78,7 @@ const mandachord = (state = initialState, { type, payload }) => {
 
     // TODO: this isn't reducing properly, investigate
     case CHANGE_INSTRUMENT:
+      console.log('CHANGE_INSTRUMENTS payload: ', payload);
       return {
         ...state,
         lastAction: type,

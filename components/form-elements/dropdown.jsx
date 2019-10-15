@@ -61,10 +61,7 @@ const DropdownBox = styled(Select)`
 const DropdownList = styled.div`
   background-color: ${palette.lotusTheme.bg};
   border: 1px solid ${palette.lotusTheme.primary};
-  display: ${props => {
-    console.log(`dropdown list visibility: ${props.isVisible} `);
-    props.isVisible ? 'flex' : 'none';
-  }};
+  display: ${props => (props.isVisible ? 'flex' : 'none')};
   flex-direction: column;
   left: 0;
   position: absolute;

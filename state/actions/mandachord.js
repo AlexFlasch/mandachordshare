@@ -10,9 +10,9 @@ export const playPauseMandachord = () => ({ type: PLAY_PAUSE });
 
 export const toggleNote = id => ({ type: TOGGLE_NOTE, payload: { id } });
 
-export const changeInstrument = (instrumentType, value) => ({
+export const changeInstrument = ({ instrumentType, instrument }) => ({
   type: CHANGE_INSTRUMENT,
-  payload: { instrumentType, value }
+  payload: { instrumentType, instrument }
 });
 
 export const updatePlaybackTime = delta => ({
