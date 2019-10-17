@@ -67,7 +67,8 @@ const createAudioScheduler = () => {
     if (stepsInQueue.length && currentTime >= stepsInQueue[0].time) {
       stepsInQueue[0].step.forEach(note => {
         const instrument = getInstrumentTypeForNote(note.sound).toLowerCase();
-        instruments[instrument].play(note.sound);
+
+        instruments[instrument][note.sound](stepsInQueue[0].time);
       });
 
       // remove that step from the queue since its already been played

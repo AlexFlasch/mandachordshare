@@ -16,6 +16,8 @@ import {
   CHANGE_INSTRUMENT
 } from '../action-types';
 
+import Tone from 'tone';
+
 let audioScheduler;
 
 // function* playSong() {

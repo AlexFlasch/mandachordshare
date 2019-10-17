@@ -1,10 +1,14 @@
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { RegularPolygon, Rect, Group } from 'react-konva';
+import Tone from 'tone';
 
 import { playPauseMandachord } from '../../state/actions/mandachord';
 import palette from '../../styles/palette';
 
 const PlayPauseButton = ({ isPaused, togglePause }) => {
+  const [toneHasStarted, setToneHasStarted] = useState(false);
+
   const color = palette.lotusTheme.accent;
   const clickShape = {
     w: 60,
@@ -27,11 +31,19 @@ const PlayPauseButton = ({ isPaused, togglePause }) => {
     );
   };
 
+  const handlePlayPauseToggle = () => {
+    if (!toneHasStarted) {
+      Tone.start();
+      setToneHasStarted(true);
+    }
+    togglePause();
+  };
+
   return (
     <Group>
       {isPaused ? getPlayButton() : getPauseButton()}
       <Rect
-        onClick={togglePause}
+        onClick={handlePlayPauseToggle}
         width={clickShape.w}
         height={clickShape.h}
         x={-clickShape.w / 2}

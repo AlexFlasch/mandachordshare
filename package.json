@@ -58,6 +58,7 @@
     "reselect": "^4.0.0",
     "styled-components": "^4.0.0",
     "svg-url-loader": "^2.3.2",
+    "tone": "^13.8.25",
     "worker-loader": "^2.0.0"
   },
   "devDependencies": {
