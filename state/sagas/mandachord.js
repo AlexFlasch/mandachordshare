@@ -69,7 +69,6 @@ const createSequence = () => {
   // array from 1 to 64
   const noteEvents = [...Array(64).keys()].map(val => val + 1);
 
-  Tone.Transport.start();
   sequence = new Tone.Sequence(
     (time, col) => {
       console.log('time: ', time);
