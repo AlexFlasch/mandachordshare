@@ -29,7 +29,7 @@
   "homepage": "https://github.com/Flascher/mandachordshare#readme",
   "dependencies": {
     "@zeit/next-workers": "^1.0.0",
-    "acorn": "^6.0.0",
+    "acorn": "^6.4.1",
     "apollo-boost": "^0.1.14",
     "apollo-server-koa": "^1.4.0",
     "graphql": "^0.13.2",
